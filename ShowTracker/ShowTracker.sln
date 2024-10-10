@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthData", "AuthData\AuthData.csproj", "{CFFD5CB8-5DC3-462C-9A9D-C7B09CDA60FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{45814EBC-40B3-4B44-B440-910C389CA244}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\UserService.csproj", "{45814EBC-40B3-4B44-B440-910C389CA244}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A4DAB39E-7C1F-47E1-9AB7-13F56E0EF008} = {C3BF3A08-DA97-4740-A25F-BAA9003D8AF2}
 		{CFFD5CB8-5DC3-462C-9A9D-C7B09CDA60FA} = {D09BF9BB-AA09-4D8E-811D-1767BE293880}
+		{45814EBC-40B3-4B44-B440-910C389CA244} = {C3BF3A08-DA97-4740-A25F-BAA9003D8AF2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85C3322A-A30E-4BCC-AA69-476E55D38254}

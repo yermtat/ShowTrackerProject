@@ -4,8 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Asp.Versioning;
 using UserService.Classes;
 using UserService.Interfaces;
+using UserService.Validators;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +25,8 @@ builder.Services.AddDbContext<AuthContext>(options =>
 
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDB"));
 });
+
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -73,10 +79,35 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
+//builder.Services.AddApiVersioning(options =>
+//{
+//    options.ReportApiVersions = true;
+//}
+//).AddApiExplorer(
+//    options =>
+//    {
+//        options.GroupNameFormat = "'v'VVV";
+//        options.SubstituteApiVersionInUrl = true;
+//    });
+
+
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<LoginUserValidator>();
+builder.Services.AddScoped<RegisterUserValidator>();
 
 var app = builder.Build();
+
+//app.UseSwagger();
+//app.UseSwaggerUI(options =>
+//{
+//    var descriptions = app.DescribeApiVersions();
+//    foreach (var description in descriptions)
+//    {
+//        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+//            description.GroupName.ToUpperInvariant());
+//    }
+//});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
