@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace AuthData.Contexts;
 
-internal class AuthContext : DbContext
+public class AuthContext : DbContext
 {
+    public DbSet<User> Users { get; set; }
+
     public AuthContext()
     {
     }

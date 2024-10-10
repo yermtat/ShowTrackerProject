@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace UserService.Interfaces;
 
-internal interface IAuthService
+public interface IAuthService
 {
     public Task<AccessInfoDTO> LoginUserAsync(LoginDTO user);
     public Task<User> RegisterUserAsync(RegisterDTO user);

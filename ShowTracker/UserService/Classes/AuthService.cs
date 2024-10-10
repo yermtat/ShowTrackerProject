@@ -6,11 +6,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserService.Interfaces;
+using static BCrypt.Net.BCrypt;
+using AuthData.Contexts;
+using AuthData.DTO;
+using AuthData.Models;
 
 namespace UserService.Classes;
 
-internal class AuthService : IAuthService
+public class AuthService : IAuthService
 {
+    private readonly AuthContext _context;
+
+    public AuthService(AuthContext context)
+    {
+        _context = context;
+    }
+
     public Task<AccessInfoDTO> LoginUserAsync(LoginDTO user)
     {
         throw new NotImplementedException();
@@ -26,8 +37,26 @@ internal class AuthService : IAuthService
         throw new NotImplementedException();
     }
 
-    public Task<User> RegisterUserAsync(RegisterDTO user)
+    public async Task<User> RegisterUserAsync(RegisterDTO user)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var newUser = new User
+            {
+                Username = user.Username,
+                Email = user.Email,
+                Password = HashPassword(user.Password)
+            };
+
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
+
+            return newUser;
+
+        }
+        catch
+        {
+            throw;
+        }
     }
 }
