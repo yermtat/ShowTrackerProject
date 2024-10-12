@@ -79,16 +79,6 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-//builder.Services.AddApiVersioning(options =>
-//{
-//    options.ReportApiVersions = true;
-//}
-//).AddApiExplorer(
-//    options =>
-//    {
-//        options.GroupNameFormat = "'v'VVV";
-//        options.SubstituteApiVersionInUrl = true;
-//    });
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -97,17 +87,6 @@ builder.Services.AddScoped<LoginUserValidator>();
 builder.Services.AddScoped<RegisterUserValidator>();
 
 var app = builder.Build();
-
-//app.UseSwagger();
-//app.UseSwaggerUI(options =>
-//{
-//    var descriptions = app.DescribeApiVersions();
-//    foreach (var description in descriptions)
-//    {
-//        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
-//            description.GroupName.ToUpperInvariant());
-//    }
-//});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
         _registerUserValidator = registerUserValidator;
     }
 
-    [HttpPost]
+    [HttpPost("Register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO user)
     {
         try { 
@@ -31,7 +31,7 @@ public class AuthController : ControllerBase
             return BadRequest(validationRes.Errors);
         }
 
-        var res = _authService.RegisterUserAsync(user);
+        var res = await _authService.RegisterUserAsync(user);
         return Ok(res);
         }
         catch (Exception ex)
@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDTO user)
     {
         try
@@ -54,6 +54,10 @@ public class AuthController : ControllerBase
             var res = _authService.LoginUserAsync(user);
 
             return Ok(res);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }

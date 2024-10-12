@@ -10,21 +10,55 @@ using static BCrypt.Net.BCrypt;
 using AuthData.Contexts;
 using AuthData.DTO;
 using AuthData.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace UserService.Classes;
 
 public class AuthService : IAuthService
 {
     private readonly AuthContext _context;
+    private readonly ITokenService _tokenService;
 
     public AuthService(AuthContext context)
     {
         _context = context;
     }
 
-    public Task<AccessInfoDTO> LoginUserAsync(LoginDTO user)
+    public async Task<AccessInfoDTO> LoginUserAsync(LoginDTO user)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var foundUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
+
+            if (foundUser == null)
+            {
+                throw new Exception( "User not found");
+            }
+
+            if (!Verify(user.Password, foundUser.Password))
+            {
+                throw new Exception("Invalid credentials");
+            }
+
+            var tokenData = new AccessInfoDTO
+            {
+                Username = foundUser.Username,
+                AccessToken = await _tokenService.GenerateTokenAsync(foundUser),
+                RefreshToken = await _tokenService.GenerateRefreshTokenAsync(),
+                RefreshTokenExpireTime = DateTime.Now.AddDays(1)
+            };
+
+            foundUser.RefreshToken = tokenData.RefreshToken;
+            foundUser.RefreshTokenExpiryTime = tokenData.RefreshTokenExpireTime;
+
+            await _context.SaveChangesAsync();
+
+            return tokenData;
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public Task LogOutAsync(TokenDTO userTokenInfo)
