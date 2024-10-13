@@ -19,9 +19,10 @@ public class AuthService : IAuthService
     private readonly AuthContext _context;
     private readonly ITokenService _tokenService;
 
-    public AuthService(AuthContext context)
+    public AuthService(AuthContext context, ITokenService tokenService)
     {
         _context = context;
+        _tokenService = tokenService;
     }
 
     public async Task<AccessInfoDTO> LoginUserAsync(LoginDTO user)
@@ -40,7 +41,7 @@ public class AuthService : IAuthService
                 throw new Exception("Invalid credentials");
             }
 
-            var tokenData = new AccessInfoDTO
+            var tokenData = new AccessInfoDTO()
             {
                 Username = foundUser.Username,
                 AccessToken = await _tokenService.GenerateTokenAsync(foundUser),

@@ -51,7 +51,7 @@ public class AuthController : ControllerBase
                 return BadRequest(validationRes.Errors);
             }
 
-            var res = _authService.LoginUserAsync(user);
+            var res = await _authService.LoginUserAsync(user);
 
             return Ok(res);
         }
