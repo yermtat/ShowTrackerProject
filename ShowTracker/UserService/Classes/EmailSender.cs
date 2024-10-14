@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace UserService.Classes;
 
-internal class EmailSender : IEmailSender
+public class EmailSender : IEmailSender
 {
     private readonly IConfiguration _configuration;
     private readonly SmtpClient _smtpClient;

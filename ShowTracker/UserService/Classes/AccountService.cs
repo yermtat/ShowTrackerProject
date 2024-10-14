@@ -16,6 +16,14 @@ public class AccountService : IAccountService
     private readonly AuthContext _context;
     private readonly ITokenService _tokenService;
     private readonly IEmailSender _emailSender;
+
+    public AccountService(AuthContext context, ITokenService tokenService, IEmailSender emailSender)
+    {
+        _context = context;
+        _tokenService = tokenService;
+        _emailSender = emailSender;
+    }
+
     public async Task ConfirmEmailAsync(string token)
     {
     
