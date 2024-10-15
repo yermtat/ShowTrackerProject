@@ -11,6 +11,7 @@ using AuthData.Contexts;
 using AuthData.DTO;
 using AuthData.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace UserService.Classes;
 
@@ -62,14 +63,58 @@ public class AuthService : IAuthService
         }
     }
 
-    public Task LogOutAsync(TokenDTO userTokenInfo)
+    public async Task LogOutAsync(TokenDTO userTokenInfo)
     {
-        throw new NotImplementedException();
+        if (userTokenInfo is null)
+            throw new Exception("Invalid client request");
+
+        var principal = _tokenService.GetPrincipalFromToken(userTokenInfo.AccessToken);
+
+        var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        var user = _context.Users.FirstOrDefault(u => u.Username == username);
+
+        user.RefreshToken = null;
+        user.RefreshTokenExpiryTime = DateTime.Now;
+        await _context.SaveChangesAsync();
+
     }
 
-    public Task<AccessInfoDTO> RefreshTokenAsync(TokenDTO userAccessData)
+    public async Task<AccessInfoDTO> RefreshTokenAsync(TokenDTO userAccessData)
     {
-        throw new NotImplementedException();
+        if (userAccessData is null)
+            throw new Exception("Invalid client request");
+
+        var accessToken = userAccessData.AccessToken;
+        var refreshToken = userAccessData.RefreshToken;
+
+        var principal = _tokenService.GetPrincipalFromToken(accessToken);
+
+        var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        var user = _context.Users.FirstOrDefault(u => u.Username == username);
+
+
+        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            throw new Exception("Invalid client request");
+
+        var newAccessToken = await _tokenService.GenerateTokenAsync(user);
+        var newRefreshToken = await _tokenService.GenerateRefreshTokenAsync();
+
+        user.RefreshToken = newRefreshToken;
+        user.RefreshTokenExpiryTime = DateTime.Now.AddDays(1);
+
+        await _context.SaveChangesAsync();
+
+        var tokenData = new AccessInfoDTO()
+        {
+            Username = username,
+            AccessToken = newAccessToken,
+            RefreshToken = newRefreshToken,
+            RefreshTokenExpireTime = user.RefreshTokenExpiryTime
+        };
+
+        return tokenData;
     }
 
     public async Task<User> RegisterUserAsync(RegisterDTO user)

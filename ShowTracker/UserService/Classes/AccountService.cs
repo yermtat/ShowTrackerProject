@@ -40,7 +40,7 @@ public class AccountService : IAccountService
 
             var confirmationToken = await _tokenService.GenerateEmailTokenAsync(user.Id.ToString());
 
-            var link = $"http://localhost:5046/api/v1/Account/ValidateConfirmation?token={confirmationToken}&userId={user.Id}";
+            var link = $"http://localhost:5263/api/v1/Account/ValidateConfirmation?token={confirmationToken}&userId={user.Id}";
 
             string message = $"Please confirm your account by <a href='{link}'>clicking here</a>;.";
             await _emailSender.SendEmailAsync(user.Email, "Email confirmation", message);
