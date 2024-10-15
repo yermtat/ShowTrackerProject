@@ -12,10 +12,12 @@ namespace AuthApiService.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
+    private readonly ITokenService _tokenService;
 
-    public AccountController(IAccountService accountService)
+    public AccountController(IAccountService accountService, ITokenService tokenService)
     {
         _accountService = accountService;
+        _tokenService = tokenService;
     }
 
     [Authorize]
@@ -30,4 +32,14 @@ public class AccountController : ControllerBase
 
         return Ok();
     }
+
+    [HttpGet("ValidateConfirmation")]
+    public async Task<IActionResult> ValidateConfirmationAsync([FromQuery] string token, [FromQuery] string userId)
+    {
+
+        await _tokenService.ValidateEmailTokenAsync(token, userId);
+
+        return Ok("Email confirmed successfully");
+    }
+
 }

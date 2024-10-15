@@ -16,26 +16,26 @@ namespace UserService.Classes;
 
 public class TokenService : ITokenService
 {
-    private readonly IConfiguration config;
+    private readonly IConfiguration _config;
     private readonly AuthContext _context;
 
     public TokenService(IConfiguration config, AuthContext context)
     {
-        this.config = config;
-        this._context = context;
+        _config = config;
+        _context = context;
     }
     public async Task<string> GenerateEmailTokenAsync(string userId)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Convert.FromBase64String(config.GetSection("EmailJwt:Key").Value);
+        var key = Convert.FromBase64String(_config.GetSection("EmailJwt:Key").Value);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] {
                 new Claim(ClaimTypes.NameIdentifier, userId)
             }),
             Expires = DateTime.UtcNow.AddMinutes(5),
-            Issuer = config.GetSection("EmailJwt:Issuer").Value,
-            Audience = config.GetSection("EmailJwt:Audience").Value,
+            Issuer = _config.GetSection("EmailJwt:Issuer").Value,
+            Audience = _config.GetSection("EmailJwt:Audience").Value,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
@@ -61,15 +61,15 @@ public class TokenService : ITokenService
                 new Claim(ClaimTypes.Email,user.Email),
             };
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("Jwt:Key").Value));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value));
 
         var signingCred = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
         var securityToken = new JwtSecurityToken(
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(10),
-            issuer: config.GetSection("Jwt:Issuer").Value,
-            audience: config.GetSection("Jwt:Audience").Value,
+            issuer: _config.GetSection("Jwt:Issuer").Value,
+            audience: _config.GetSection("Jwt:Audience").Value,
             signingCredentials: signingCred);
 
         string tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
@@ -83,7 +83,7 @@ public class TokenService : ITokenService
             ValidateAudience = false,
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("Jwt:Key").Value)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value)),
             ValidateLifetime = validateLifetime
         };
 
@@ -100,8 +100,51 @@ public class TokenService : ITokenService
         return principal;
     }
 
-    public Task ValidateEmailTokenAsync(string token, string userId)
+    public async Task ValidateEmailTokenAsync(string token, string userId)
     {
-        throw new NotImplementedException();
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Convert.FromBase64String(_config.GetSection("EmailJwt:Key").Value);
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = _config.GetSection("EmailJwt:Issuer").Value,
+            ValidAudience = _config.GetSection("EmailJwt:Audience").Value,
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+
+        try
+        {
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+
+            var Id = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == Id);
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            if (user.Id.ToString() != userId)
+            {
+                throw new Exception("Invalid token");
+            }
+
+            if (user.IsEmailConfirmed)
+            {
+                throw new Exception("Email already confirmed");
+            }
+
+            user.IsEmailConfirmed = true;
+
+            await _context.SaveChangesAsync();
+        }
+        catch
+        {
+            throw;
+        }
     }
 }

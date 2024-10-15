@@ -1,6 +1,8 @@
 ﻿using AuthData.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UserService.Classes;
 using UserService.Interfaces;
 using UserService.Validators;
 
@@ -59,5 +61,27 @@ public class AuthController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+
+
+    [Authorize]
+    [HttpPost("Refresh")]
+    public async Task<IActionResult> RefreshTokenAsync(TokenDTO refresh)
+    {
+        var newToken = await _authService.RefreshTokenAsync(refresh);
+
+        if (newToken is null)
+            return BadRequest("Invalid token");
+
+        return Ok(newToken);
+    }
+
+
+    [Authorize]
+    [HttpPost("Logout")]
+    public async Task<IActionResult> LogoutAsync(TokenDTO logout)
+    {
+        await _authService.LogOutAsync(logout);
+        return Ok("Logged out successfully");
     }
 }
