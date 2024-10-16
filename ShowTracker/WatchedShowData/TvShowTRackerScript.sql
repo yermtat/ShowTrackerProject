@@ -30,7 +30,7 @@ BEGIN
         WHERE u.Id IS NULL
     )
         BEGIN
-            RAISERROR('Ошибка целостности данных: UserID не существует в Auth_8.dbo.Users.', 16, 1);
+            RAISERROR('Ошибка целостности данных: UserID не существует', 16, 1);
             ROLLBACK TRANSACTION;
         END
 END;
