@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using WatchedShowData.Contexts;
 using WatchedShowData.DTO;
 using WatchedShowService.Interfaces;
 
@@ -57,5 +56,33 @@ public class ShowsDataController : ControllerBase
             return BadRequest(ex.Message);
         }
 
+    }
+
+    [Authorize]
+    [HttpGet("GetWatchedShows")]
+    public async Task<IActionResult> GetWatchedShowAsync()
+    {
+        try
+        {
+            var token = HttpContext.Request.Headers["Authorization"];
+
+            token = token.ToString().Replace("Bearer ", "");
+
+            var res = await _showTrackerService.GetWatchedShowsIdAsync(token);
+
+            return Ok(res);
+
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("GetWatchedEpisodes")]
+    public async Task<IActionResult> GetWatchedEpisodes()
+    {
+        return Ok();
     }
 }

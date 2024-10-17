@@ -1,5 +1,6 @@
 ﻿using AuthData.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,8 @@ public class ShowTrackerService : IShowTrackerService
 
     public async Task MarkEpisodeWatchedAsync(int showId, int seasonNumber, int episodeNumber, string token)
     {
-        try { 
+        try
+        {
             var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
 
             var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -55,7 +57,8 @@ public class ShowTrackerService : IShowTrackerService
 
 
 
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             throw ex;
         }
@@ -63,6 +66,32 @@ public class ShowTrackerService : IShowTrackerService
     }
 
     public async Task MarkShowWatchedAsync(int showId, string token)
+    {
+        try
+        {
+            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
+
+            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            var watchedShow = new WatchedShow { ShowId = showId, UserId = user.Id };
+            await _showTrackerContext.WatchedShows.AddAsync(watchedShow);
+            await _showTrackerContext.SaveChangesAsync();
+
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<List<int>> GetWatchedShowsIdAsync(string token)
     {
         try { 
             var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
@@ -76,11 +105,11 @@ public class ShowTrackerService : IShowTrackerService
                 throw new Exception("User not found");
             }
 
-            var watchedShow = new WatchedShow { ShowId = showId, UserId = user.Id};
-            await _showTrackerContext.WatchedShows.AddAsync(watchedShow);
-            await _showTrackerContext.SaveChangesAsync();
+            var shows = _showTrackerContext.WatchedShows.Where(u => u.UserId == user.Id).Select(s => s.ShowId).ToList();
 
-        } catch (Exception ex)
+            return shows;
+        }
+        catch(Exception ex)
         {
             throw ex;
         }

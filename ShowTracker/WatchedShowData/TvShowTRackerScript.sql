@@ -10,6 +10,7 @@ CREATE TABLE WatchedShows(
 go;
 
 CREATE TABLE WatchedEpisodes(
+    Id int IDENTITY (1, 1) primary key,
 	WatchedShowId int not null,
 	Season int not null,
 	Episode int not null,

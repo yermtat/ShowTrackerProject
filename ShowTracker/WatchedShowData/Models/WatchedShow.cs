@@ -10,4 +10,6 @@ public partial class WatchedShow
     public Guid UserId { get; set; }
 
     public int ShowId { get; set; }
+
+    public virtual ICollection<WatchedEpisode> WatchedEpisodes { get; set; } = new List<WatchedEpisode>();
 }

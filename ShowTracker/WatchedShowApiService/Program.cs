@@ -19,9 +19,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ShowTrackerDbContext>(options => {
+builder.Services.AddDbContext<ShowTrackerDbContext>(options =>
+{
     options.UseSqlServer(builder.Configuration.GetConnectionString("WatchedShows"));
-}) ;
+});
 builder.Services.AddDbContext<AuthContext>(options =>
 {
 
