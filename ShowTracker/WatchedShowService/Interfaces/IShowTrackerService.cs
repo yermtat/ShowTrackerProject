@@ -8,5 +8,6 @@ namespace WatchedShowService.Interfaces;
 
 public interface IShowTrackerService
 {
-    public Task MarkWatchedAsync(int showId, string token);
+    public Task MarkShowWatchedAsync(int showId, string token);
+    public Task MarkEpisodeWatchedAsync(int showId, int seasonNumber, int episodeNumber, string token);
 }

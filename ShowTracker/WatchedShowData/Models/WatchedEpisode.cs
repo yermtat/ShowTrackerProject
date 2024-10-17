@@ -5,6 +5,8 @@ namespace WatchedShowData.Models;
 
 public partial class WatchedEpisode
 {
+
+    public int Id { get; set; }
     public int WatchedShowId { get; set; }
 
     public int Season { get; set; }

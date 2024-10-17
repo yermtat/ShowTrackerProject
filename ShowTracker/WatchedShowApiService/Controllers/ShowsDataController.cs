@@ -21,16 +21,41 @@ public class ShowsDataController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("MarkAsWatched")]
-    public async Task<IActionResult> MarkWatchedAsync(int ShowId )
+    [HttpPost("MarkWatched/{ShowId}")]
+    public async Task<IActionResult> MarkShowWatchedAsync(int ShowId )
     {
-        var token = HttpContext.Request.Headers["Authorization"];
+        try { 
+         var token = HttpContext.Request.Headers["Authorization"];
 
-        token = token.ToString().Replace("Bearer ", "");
+         token = token.ToString().Replace("Bearer ", "");
 
-        await _showTrackerService.MarkWatchedAsync(ShowId, token);
+         await _showTrackerService.MarkShowWatchedAsync(ShowId, token);
 
-        return Ok();
+         return Ok();
+         
+        }catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
+    [Authorize]
+    [HttpGet("MarkWatched/{showId}/{seasonNumber}/{episodeNumber}")]
+    public async Task<IActionResult> MarkEpisodeWatchedAsync(int showId, int seasonNumber, int episodeNumber)
+    {
+        try { 
+            var token = HttpContext.Request.Headers["Authorization"];
+
+            token = token.ToString().Replace("Bearer ", "");
+
+            await _showTrackerService.MarkEpisodeWatchedAsync(showId, seasonNumber, episodeNumber, token);
+
+            return Ok();
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+    }
 }
