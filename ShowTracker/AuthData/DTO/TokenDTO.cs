@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuthData.DTO;
 
-public class TokenDTO
-{
-    public string RefreshToken { get; set; }
-    public string AccessToken { get; set; }
-}
+public record TokenDTO(
+    string AccessToken,
+    string RefreshToken
+);

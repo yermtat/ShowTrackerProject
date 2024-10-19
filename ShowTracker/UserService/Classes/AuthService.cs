@@ -42,16 +42,15 @@ public class AuthService : IAuthService
                 throw new Exception("Invalid credentials");
             }
 
-            var tokenData = new AccessInfoDTO()
-            {
-                Username = foundUser.Username,
-                AccessToken = await _tokenService.GenerateTokenAsync(foundUser),
-                RefreshToken = await _tokenService.GenerateRefreshTokenAsync(),
-                RefreshTokenExpireTime = DateTime.Now.AddDays(1)
-            };
+            var tokenData = new AccessInfoDTO(
+                foundUser.Username,
+                await _tokenService.GenerateTokenAsync(foundUser),
+                await _tokenService.GenerateRefreshTokenAsync(),
+                DateTime.Now.AddDays(1)
+            );
 
-            foundUser.RefreshToken = tokenData.RefreshToken;
-            foundUser.RefreshTokenExpiryTime = tokenData.RefreshTokenExpireTime;
+            foundUser.RefreshToken = tokenData.refreshToken;
+            foundUser.RefreshTokenExpiryTime = tokenData.refreshTokenExpireTime;
 
             await _context.SaveChangesAsync();
 
@@ -106,13 +105,12 @@ public class AuthService : IAuthService
 
         await _context.SaveChangesAsync();
 
-        var tokenData = new AccessInfoDTO()
-        {
-            Username = username,
-            AccessToken = newAccessToken,
-            RefreshToken = newRefreshToken,
-            RefreshTokenExpireTime = user.RefreshTokenExpiryTime
-        };
+        var tokenData = new AccessInfoDTO(
+            username,
+            newAccessToken,
+            newRefreshToken,
+            user.RefreshTokenExpiryTime
+        );
 
         return tokenData;
     }

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace AuthData.DTO;
 
-public class RegisterDTO
-{
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string ConfirmPassword { get; set; }
-}
+public record RegisterDTO(
+    string Username,
+    string Email,
+    string Password,
+    string ConfirmPassword
+);
