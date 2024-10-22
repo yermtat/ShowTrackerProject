@@ -1,9 +1,12 @@
 import React from "react";
-import { useRef } from "react";
+import { useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { authContext } from "./MainWindow";
 
 export default function Login() {
   const navigate = useNavigate();
+
+  const isAuthorized = useContext(authContext);
 
   const refUsername = useRef();
   const refPassword = useRef();
@@ -31,7 +34,8 @@ export default function Login() {
     localStorage.setItem("refreshToken", data.refreshToken);
     localStorage.setItem("refershTokenExpiry", data.refreshTokenExpireTime);
 
-    navigateTo("/login");
+    isAuthorized.setAuthState(true);
+    navigateTo("/home");
   };
 
   const navigateTo = (path) => {

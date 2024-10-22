@@ -53,6 +53,16 @@ export default function Navbar() {
                 Home
               </a>
             </Link>
+            {isAuthorized.authState && (
+              <Link to="/myshows">
+                <a
+                  href="/"
+                  class="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
+                >
+                  My shows
+                </a>
+              </Link>
+            )}
           </div>
 
           <div className="flex">
@@ -86,18 +96,24 @@ export default function Navbar() {
                 {!isAuthorized.authState ? (
                   <div>
                     <Link to="/login">
-                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400">
+                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400 m-1">
                         Login
                       </a>
                     </Link>
                     <Link to="/register">
-                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400">
+                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400 margin-10px m-1">
                         Register
                       </a>
                     </Link>
                   </div>
                 ) : (
-                  <div>Logout</div>
+                  <div>
+                    <Link to="/logout">
+                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400">
+                        Logout
+                      </a>
+                    </Link>
+                  </div>
                 )}
               </div>
             </Popup>

@@ -2,6 +2,8 @@ import Home from "./Home";
 import MainWindow from "./MainWindow";
 import Login from "./Login";
 import Register from "./Register";
+import Logout from "./Logout";
+import Myshows from "./Myshows";
 
 const children = [
   {
@@ -19,6 +21,14 @@ const children = [
   {
     path: "register",
     element: <Register />,
+  },
+  {
+    path: "logout",
+    element: <Logout />,
+  },
+  {
+    path: "myshows",
+    element: <Myshows />,
   },
 ];
 

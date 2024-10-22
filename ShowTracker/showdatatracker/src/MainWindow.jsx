@@ -22,7 +22,14 @@ export default function MainWindow() {
         </header>
 
         <main>
-          <Outlet className="outlet" />
+          <div className="background-bg ">
+            <div className="w-screen pl-60 pr-60 flex justify-start">
+              <div className="border-l border-r w-screen h-screen">
+                {" "}
+                <Outlet className="outlet" />
+              </div>
+            </div>
+          </div>
         </main>
 
         <footer></footer>

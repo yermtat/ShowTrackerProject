@@ -9,13 +9,14 @@ export default function Register() {
   const refConfirmPassword = useRef();
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const username = refUsername.current.value;
     const password = refPassword.current.value;
     const email = refEmail.current.value;
     const confirmPassword = refConfirmPassword.current.value;
 
     const fetchedData = await fetch(
-      "https://localhost:7015/api/v1/Auth/Login",
+      "https://localhost:7015/api/v1/Auth/Register",
       {
         method: "POST",
         headers: {
@@ -26,7 +27,9 @@ export default function Register() {
     );
 
     const data = await fetchedData.json();
+    console.log(data);
   };
+
   return (
     <div>
       <div className="w-full relative mb-20">
@@ -37,13 +40,14 @@ export default function Register() {
                 <h1 class="pt-8 pb-6 font-bold text-white text-5xl text-center cursor-default">
                   Register
                 </h1>
-                <form action="#" method="post" class="space-y-4">
+                <form onSubmit={handleSubmit} method="post" class="space-y-4">
                   <div>
                     <input
                       id="usaername"
                       class="border p-3 dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 shadow-md placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
                       type="username"
                       placeholder="Username"
+                      ref={refUsername}
                       required
                     />
                   </div>
@@ -53,6 +57,7 @@ export default function Register() {
                       class="border p-3 dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 shadow-md placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
                       type="email"
                       placeholder="Email"
+                      ref={refEmail}
                       required
                     />
                   </div>
@@ -62,6 +67,7 @@ export default function Register() {
                       class="border p-3 shadow-md dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
                       type="password"
                       placeholder="Password"
+                      ref={refPassword}
                       required
                     />
                   </div>
@@ -71,6 +77,7 @@ export default function Register() {
                       class="border p-3 shadow-md dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
                       type="password"
                       placeholder="Confrim password"
+                      ref={refConfirmPassword}
                       required
                     />
                   </div>
