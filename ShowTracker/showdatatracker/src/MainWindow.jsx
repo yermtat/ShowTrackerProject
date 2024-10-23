@@ -17,14 +17,14 @@ export default function MainWindow() {
   return (
     <div>
       <authContext.Provider value={{ authState, setAuthState }}>
-        <header>
+        <header className="fixed">
           <Navbar />
         </header>
 
-        <main>
+        <main className="pt-20">
           <div className="background-bg ">
-            <div className="w-screen pl-60 pr-60 flex justify-start">
-              <div className="border-l border-r w-screen h-screen">
+            <div className="w-full pl-60 pr-60 flex justify-start">
+              <div className="border-l border-r w-full h-full">
                 {" "}
                 <Outlet className="outlet" />
               </div>
