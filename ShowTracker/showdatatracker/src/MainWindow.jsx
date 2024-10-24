@@ -23,7 +23,7 @@ export default function MainWindow() {
 
         <main className="pt-20">
           <div className="background-bg ">
-            <div className="w-full pl-60 pr-60 flex justify-start">
+            <div className="w-full pl-60 pr-60">
               <div className="border-l border-r w-full h-full">
                 {" "}
                 <Outlet className="outlet" />
