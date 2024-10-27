@@ -1,10 +1,11 @@
-import Home from "./Home";
-import MainWindow from "./MainWindow";
-import Login from "./Login";
-import Register from "./Register";
-import Logout from "./Logout";
-import Myshows from "./Myshows";
-import { trendingLoader } from "./Actions/Loaders";
+import Home from "./Components/Home";
+import MainWindow from "./Components/MainWindow";
+import Login from "./Components/Login";
+import Register from "./Components/Register";
+import Logout from "./Components/Logout";
+import Myshows from "./Components/Myshows";
+import { showDetailsLoader, trendingLoader } from "./Actions/Loaders";
+import ShowDetails from "./Components/ShowDetails";
 
 const children = [
   {
@@ -32,6 +33,11 @@ const children = [
   {
     path: "myshows",
     element: <Myshows />,
+  },
+  {
+    path: "showDetails/:id",
+    element: <ShowDetails />,
+    loader: showDetailsLoader,
   },
 ];
 

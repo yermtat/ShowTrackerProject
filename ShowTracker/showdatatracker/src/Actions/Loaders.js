@@ -15,3 +15,19 @@ export async function trendingLoader() {
     console.log(error);
   }
 }
+
+export const showDetailsLoader = async ({ params }) => {
+  try {
+    console.log(params.id);
+    const url = `https://api.tvmaze.com/shows/${params.id}?embed=episodes`;
+    const options = {
+      method: "GET",
+    };
+
+    const res = await fetch(url, options).then((response) => response.json());
+    console.log(res);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
