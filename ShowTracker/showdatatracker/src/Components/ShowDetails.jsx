@@ -1,25 +1,44 @@
 import React, { useContext } from "react";
 import { useLoaderData } from "react-router-dom";
 import { authContext } from "./MainWindow";
+import { useCookies } from "react-cookie";
+import axios from "axios";
 
 export default function ShowDetails() {
   const show = useLoaderData();
   const isAuthorized = useContext(authContext);
 
-  const token = localStorage.getItem("accessToken");
+  const [cookies] = useCookies(["accessToken"]);
 
   const handleClick = async () => {
     try {
-      const fetchedData = await fetch(
+      // const token = localStorage.getItem("accessToken");
+
+      // const fetchedData = await fetch(
+      //   `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.id}`,
+      //   {
+      //     credentials: "same-origin",
+      //     method: "POST",
+      //     headers: {
+      //       Accept: "*/*",
+      //       Host: "http://localhost:3000",
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${cookies.accessToken}`,
+      //     },
+      //   }
+      // );
+
+      const fetchedData = await axios.post(
         `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.id}`,
+        {}, // тело запроса, если оно не нужно, оставьте пустым объектом
         {
-          method: "POST",
-          headers: {
-            Accept: "*/*",
-            Host: "http://localhost:3000",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true, // передается в конфигурацию запроса
+        },
+        {
+          Accept: "*/*",
+          Host: "http://localhost:3000",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookies.accessToken}`,
         }
       );
 

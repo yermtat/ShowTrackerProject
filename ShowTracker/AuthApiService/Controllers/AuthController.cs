@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using System.Net;
+using System.Net.Http;
 using UserService.Classes;
 using UserService.Interfaces;
 using UserService.Validators;
@@ -54,6 +57,22 @@ public class AuthController : ControllerBase
             }
 
             var res = await _authService.LoginUserAsync(user);
+
+            var cookieAccess = new CookieHeaderValue("accessToken", res.accessToken);
+            var cookieResfresh = new CookieHeaderValue("refreshToken", res.refreshToken);
+
+            // Define the cookie options
+            var cookieOptions = new CookieOptions
+            {
+                Path = "/",
+                HttpOnly = true,  // Cookie is only accessible via HTTP requests
+                Secure = true,    // Cookie is only sent over HTTPS
+                Expires = res.refreshTokenExpireTime // Set cookie expiration
+            };
+
+            // Set the cookie
+            Response.Cookies.Append("accessToken", res.accessToken, cookieOptions);
+            Response.Cookies.Append("refreshToken", res.refreshToken, cookieOptions);
 
             return Ok(res);
         }

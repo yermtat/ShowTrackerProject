@@ -2,6 +2,7 @@ import React from "react";
 import { useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { authContext } from "./MainWindow";
+import axios from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,22 +18,32 @@ export default function Login() {
     const username = refUsername.current.value;
     const password = refPassword.current.value;
 
-    const fetchedData = await fetch(
+    // const fetchedData = await fetch(
+    //   "https://localhost:7015/api/v1/Auth/Login",
+    //   {
+    //     credentials: "same-origin",
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ username, password }),
+    //   }
+    // );
+
+    const fetchedData = await axios.post(
       "https://localhost:7015/api/v1/Auth/Login",
+      { username: username, password: password },
       {
-        method: "POST",
+        withCredentials: true,
+      },
+      {
         headers: {
+          Accept: "*/*",
+          Host: "http://localhost:3000",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
       }
     );
-
-    const data = await fetchedData.json();
-
-    localStorage.setItem("accessToken", data.accessToken);
-    localStorage.setItem("refreshToken", data.refreshToken);
-    localStorage.setItem("refershTokenExpiry", data.refreshTokenExpireTime);
 
     isAuthorized.setAuthState(true);
     navigateTo("/home");
