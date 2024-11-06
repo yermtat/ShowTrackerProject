@@ -11,6 +11,10 @@ using WatchedShowService.Classes;
 using WatchedShowService.Interfaces;
 using AuthData.DTO;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http.Extensions;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +47,18 @@ builder.Services.AddCors(options =>
     });
 });
 
+
+//builder.Services.Configure<CookiePolicyOptions>(options =>
+//{
+//    options.MinimumSameSitePolicy = SameSiteMode.None;
+//    options.HttpOnly = HttpOnlyPolicy.Always;
+//    options.Secure = CookieSecurePolicy.Always;
+//});
+
+
+builder.Services.AddHttpClient("MyClient");
+
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -74,6 +90,7 @@ builder.Services.AddAuthentication(options =>
             if (!string.IsNullOrEmpty(accessToken))
             {
                 context.Token = accessToken;
+                context.HttpContext.Request.Headers["Authorization"] = $"Bearer {accessToken}";
             }
 
             return Task.CompletedTask;
@@ -93,7 +110,7 @@ builder.Services.AddAuthentication(options =>
                 if (!string.IsNullOrEmpty(refreshToken))
                 {
                     var refreshEndpoint =
-                        $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/api/v1/Auth/Refresh";
+                        "https://localhost:7015/api/v1/Auth/Refresh";
                     var client = httpContext.RequestServices.GetRequiredService<IHttpClientFactory>().CreateClient();
 
                     var response = await client.PostAsJsonAsync(refreshEndpoint, new TokenDTO(accessToken, refreshToken));
@@ -103,18 +120,49 @@ builder.Services.AddAuthentication(options =>
                         var newTokens = await response.Content.ReadFromJsonAsync<TokenDTO>();
                         if (newTokens != null)
                         {
-                            httpContext.Response.Cookies.Append("accessToken", newTokens.AccessToken);
-                            httpContext.Response.Cookies.Append("refreshToken", newTokens.RefreshToken);
+                            var cookieOptions = new CookieOptions
+                            {
+                                Path = "/",
+                                HttpOnly = true,  // Cookie is only accessible via HTTP requests
+                                Secure = true,    // Cookie is only sent over HTTPS
+                                Expires = DateTime.UtcNow.AddDays(1), // Set cookie expiration
+                                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
+                            };
+
+                            httpContext.Response.Cookies.Append("accessToken", newTokens.AccessToken, cookieOptions);
+                            httpContext.Response.Cookies.Append("refreshToken", newTokens.RefreshToken, cookieOptions);
 
 
-                            httpContext.Request.Headers["Authorization"] = $"Bearer {newTokens.AccessToken}";
+                            //httpContext.Request.Headers["Authorization"] = $"Bearer {newTokens.AccessToken}";
 
-                            context.HttpContext.Features.Set(
-                                new TokenValidatedContext(context.HttpContext, context.Scheme, context.Options)
-                                {
-                                    Principal = context.Principal,
-                                    SecurityToken = new JwtSecurityToken(newTokens.AccessToken)
-                                });
+                            //context.HttpContext.Features.Set(
+                            //    new TokenValidatedContext(context.HttpContext, context.Scheme, context.Options)
+                            //    {
+                            //        Principal = context.Principal,
+                            //        SecurityToken = new JwtSecurityToken(newTokens.AccessToken)
+                            //    });
+
+
+                            var originalRequest = httpContext.Request;
+                            var retryClient = httpContext.RequestServices.GetRequiredService<IHttpClientFactory>().CreateClient();
+
+                            // Создаем новый запрос с обновленным accessToken
+                            var retryRequest = new HttpRequestMessage(new HttpMethod(originalRequest.Method), originalRequest.GetDisplayUrl())
+                            {
+                                Content = originalRequest.HasFormContentType
+                                          ? new FormUrlEncodedContent(originalRequest.Form.ToDictionary(x => x.Key, x => x.Value.ToString()))
+                                          : null
+                            };
+                            retryRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newTokens.AccessToken);
+
+                            // Выполняем повторный запрос
+                            var retryResponse = await retryClient.SendAsync(retryRequest);
+
+                            // Завершаем текущий pipeline с результатом повторного запроса
+                            httpContext.Response.StatusCode = (int)retryResponse.StatusCode;
+                            await retryResponse.Content.CopyToAsync(httpContext.Response.Body);
+
+                            return;
                         }
 
                     }

@@ -8,10 +8,6 @@ export default function Logout() {
   const isAuthorized = useContext(authContext);
 
   useEffect(() => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("refershTokenExpiry");
-
     isAuthorized.setAuthState(false);
     navigate("/login");
     window.location.reload();

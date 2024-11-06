@@ -67,7 +67,8 @@ public class AuthController : ControllerBase
                 Path = "/",
                 HttpOnly = true,  // Cookie is only accessible via HTTP requests
                 Secure = true,    // Cookie is only sent over HTTPS
-                Expires = res.refreshTokenExpireTime // Set cookie expiration
+                Expires = res.refreshTokenExpireTime, // Set cookie expiration
+                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
             };
 
             // Set the cookie
@@ -83,7 +84,6 @@ public class AuthController : ControllerBase
     }
 
 
-    [Authorize]
     [HttpPost("Refresh")]
     public async Task<IActionResult> RefreshTokenAsync(TokenDTO refresh)
     {
@@ -100,7 +100,13 @@ public class AuthController : ControllerBase
     [HttpPost("Logout")]
     public async Task<IActionResult> LogoutAsync(TokenDTO logout)
     {
+
+
         await _authService.LogOutAsync(logout);
+
+        Response.Cookies.Delete("accessToken");
+        Response.Cookies.Delete("refreshToken");
+
         return Ok("Logged out successfully");
     }
 }

@@ -13,6 +13,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using AuthData.DTO;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.CookiePolicy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,14 @@ builder.Services.AddCors(options =>
     });
 });
 
+//builder.Services.Configure<CookiePolicyOptions>(options =>
+//{
+//    options.MinimumSameSitePolicy = SameSiteMode.None;
+//    options.HttpOnly = HttpOnlyPolicy.Always;
+//    options.Secure = CookieSecurePolicy.Always;
+//});
+
+builder.Services.AddHttpClient("MyClient");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -64,9 +73,73 @@ builder.Services.AddAuthentication(options =>
 
 
 
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.HttpContext.Request.Cookies["accessToken"];
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                context.Token = accessToken;
+            }
 
-}
-);
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = async context =>
+        {
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                var httpContext = context.HttpContext;
+
+                var accessToken =
+                    httpContext.Request.Cookies["accessToken"];
+
+                var refreshToken =
+                    httpContext.Request.Cookies["refreshToken"];
+
+                if (!string.IsNullOrEmpty(refreshToken))
+                {
+                    var refreshEndpoint =
+                        $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/api/v1/Auth/Refresh";
+                    var client = httpContext.RequestServices.GetRequiredService<IHttpClientFactory>().CreateClient();
+
+                    var response = await client.PostAsJsonAsync(refreshEndpoint, new TokenDTO(accessToken, refreshToken));
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var newTokens = await response.Content.ReadFromJsonAsync<TokenDTO>();
+                        if (newTokens != null)
+                        {
+
+                            var cookieOptions = new CookieOptions
+                            {
+                                Path = "/",
+                                HttpOnly = true,  // Cookie is only accessible via HTTP requests
+                                Secure = true,    // Cookie is only sent over HTTPS
+                                Expires = DateTime.UtcNow.AddDays(1), // Set cookie expiration
+                                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
+                            };
+
+                            httpContext.Response.Cookies.Append("accessToken", newTokens.AccessToken, cookieOptions);
+                            httpContext.Response.Cookies.Append("refreshToken", newTokens.RefreshToken, cookieOptions);
+
+
+                            httpContext.Request.Headers["Authorization"] = $"Bearer {newTokens.AccessToken}";
+
+                            context.HttpContext.Features.Set(
+                                new TokenValidatedContext(context.HttpContext, context.Scheme, context.Options)
+                                {
+                                    Principal = context.Principal,
+                                    SecurityToken = new JwtSecurityToken(newTokens.AccessToken)
+                                });
+                        }
+                    }
+                }
+            }
+        }
+    };
+});
+
 
 
 builder.Services.AddSwaggerGen(options =>

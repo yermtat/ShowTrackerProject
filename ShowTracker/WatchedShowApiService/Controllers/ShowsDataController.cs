@@ -22,6 +22,7 @@ public class ShowsDataController : ControllerBase
     [HttpPost("MarkWatched/{ShowId}")]
     public async Task<IActionResult> MarkShowWatchedAsync(int ShowId )
     {
+
         try { 
          var token = HttpContext.Request.Headers["Authorization"];
 
@@ -58,7 +59,7 @@ public class ShowsDataController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("GetWatchedShows")]
+    [HttpPost("GetWatchedShows")]
     public async Task<IActionResult> GetWatchedShowAsync()
     {
         try

@@ -1,33 +1,14 @@
 import React, { useContext } from "react";
 import { useLoaderData } from "react-router-dom";
 import { authContext } from "./MainWindow";
-import { useCookies } from "react-cookie";
 import axios from "axios";
 
 export default function ShowDetails() {
   const show = useLoaderData();
   const isAuthorized = useContext(authContext);
 
-  const [cookies] = useCookies(["accessToken"]);
-
   const handleClick = async () => {
     try {
-      // const token = localStorage.getItem("accessToken");
-
-      // const fetchedData = await fetch(
-      //   `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.id}`,
-      //   {
-      //     credentials: "same-origin",
-      //     method: "POST",
-      //     headers: {
-      //       Accept: "*/*",
-      //       Host: "http://localhost:3000",
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${cookies.accessToken}`,
-      //     },
-      //   }
-      // );
-
       const fetchedData = await axios.post(
         `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.id}`,
         {}, // тело запроса, если оно не нужно, оставьте пустым объектом
@@ -37,16 +18,18 @@ export default function ShowDetails() {
         {
           Accept: "*/*",
           Host: "http://localhost:3000",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cookies.accessToken}`,
         }
       );
 
-      // const data = await fetchedData.json();
       console.log(fetchedData);
     } catch (errors) {
       console.log(errors);
     }
+  };
+
+  const handleEpisode = (episodeNumber, seasonNumber, isWatched) => {
+    console.log("checkbox");
+    console.log(isWatched);
   };
 
   return (
@@ -94,16 +77,28 @@ export default function ShowDetails() {
         <div className="border rounded-xl border-gray-600">
           <ul className="list-none">
             {show._embedded.episodes.map((episode) => (
-              <li>
-                <div className="m-5">
-                  <span className="m-5">
-                    {" "}
-                    {episode.season} x {episode.number}
-                  </span>
-                  <span className="m-5"> {episode.name}</span>
-                  <span className="m-5"> {episode.airdate}</span>
-                </div>
-              </li>
+              <form onSubmit={handleEpisode}>
+                <li>
+                  <div className="m-5">
+                    <span className="m-5">
+                      {" "}
+                      {episode.season} x {episode.number}
+                    </span>
+                    <span className="m-5"> {episode.name}</span>
+                    <span className="m-5"> {episode.airdate}</span>
+                    <input
+                      type="checkbox"
+                      onChange={(e) =>
+                        handleEpisode(
+                          episode.season,
+                          episode.number,
+                          e.target.checked
+                        )
+                      }
+                    />
+                  </div>
+                </li>
+              </form>
             ))}
           </ul>
         </div>

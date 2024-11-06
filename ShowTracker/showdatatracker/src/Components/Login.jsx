@@ -18,32 +18,22 @@ export default function Login() {
     const username = refUsername.current.value;
     const password = refPassword.current.value;
 
-    // const fetchedData = await fetch(
-    //   "https://localhost:7015/api/v1/Auth/Login",
-    //   {
-    //     credentials: "same-origin",
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ username, password }),
-    //   }
-    // );
-
-    const fetchedData = await axios.post(
-      "https://localhost:7015/api/v1/Auth/Login",
-      { username: username, password: password },
-      {
-        withCredentials: true,
-      },
-      {
-        headers: {
-          Accept: "*/*",
-          Host: "http://localhost:3000",
-          "Content-Type": "application/json",
+    try {
+      const fetchedData = await axios.post(
+        "https://localhost:7015/api/v1/Auth/Login",
+        { username: username, password: password },
+        {
+          withCredentials: true,
         },
-      }
-    );
+        {
+          headers: {
+            Accept: "*/*",
+            Host: "http://localhost:3000",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (ex) {}
 
     isAuthorized.setAuthState(true);
     navigateTo("/home");
