@@ -2,7 +2,6 @@ import Home from "./Components/Home";
 import MainWindow from "./Components/MainWindow";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
-import Logout from "./Components/Logout";
 import Myshows from "./Components/Myshows";
 import { showDetailsLoader, trendingLoader } from "./Actions/Loaders";
 import ShowDetails from "./Components/ShowDetails";
@@ -25,10 +24,6 @@ const children = [
   {
     path: "register",
     element: <Register />,
-  },
-  {
-    path: "logout",
-    element: <Logout />,
   },
   {
     path: "myshows",

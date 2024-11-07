@@ -82,10 +82,12 @@ export default function ShowDetails() {
                   <div className="m-5">
                     <span className="m-5">
                       {" "}
-                      {episode.season} x {episode.number}
+                     {episode.season} x {episode.number}
                     </span>
                     <span className="m-5"> {episode.name}</span>
                     <span className="m-5"> {episode.airdate}</span>
+                    
+            {isAuthorized.authState && (
                     <input
                       type="checkbox"
                       onChange={(e) =>
@@ -95,7 +97,7 @@ export default function ShowDetails() {
                           e.target.checked
                         )
                       }
-                    />
+                    />)}
                   </div>
                 </li>
               </form>

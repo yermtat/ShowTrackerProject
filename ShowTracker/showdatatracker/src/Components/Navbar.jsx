@@ -3,14 +3,33 @@ import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
 import Popup from "reactjs-popup";
 import { authContext } from "./MainWindow";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../Actions/Actions";
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const isAuthorized = useContext(authContext);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const logoutHandle = async () =>{
+    try{
+      await logout();
+      navigateTo("/login");
+    }
+    catch (ex){
+      console.log(ex);
+    }
+
+  }
+
+  const navigateTo = (path) => {
+    navigate(path);
   };
 
   return (
@@ -108,11 +127,9 @@ export default function Navbar() {
                   </div>
                 ) : (
                   <div>
-                    <Link to="/logout">
-                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400">
+                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400" onClick={logoutHandle}>
                         Logout
                       </a>
-                    </Link>
                   </div>
                 )}
               </div>

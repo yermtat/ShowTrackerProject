@@ -1,4 +1,5 @@
 ﻿using AuthData.DTO;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -98,11 +99,12 @@ public class AuthController : ControllerBase
 
     [Authorize]
     [HttpPost("Logout")]
-    public async Task<IActionResult> LogoutAsync(TokenDTO logout)
+    public async Task<IActionResult> LogoutAsync()
     {
+        string accessToken = Request.Cookies["accessToken"];
+        string refreshToken = Request.Cookies["refreshToken"];
 
-
-        await _authService.LogOutAsync(logout);
+        await _authService.LogOutAsync(new TokenDTO (accessToken, refreshToken));
 
         Response.Cookies.Delete("accessToken");
         Response.Cookies.Delete("refreshToken");
