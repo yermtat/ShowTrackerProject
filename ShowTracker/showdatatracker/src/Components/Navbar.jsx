@@ -6,7 +6,6 @@ import { authContext } from "./MainWindow";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../Actions/Actions";
 
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -17,16 +16,15 @@ export default function Navbar() {
     setIsOpen(!isOpen);
   };
 
-  const logoutHandle = async () =>{
-    try{
+  const logoutHandle = async () => {
+    try {
       await logout();
+      isAuthorized.setAuthState(false);
       navigateTo("/login");
-    }
-    catch (ex){
+    } catch (ex) {
       console.log(ex);
     }
-
-  }
+  };
 
   const navigateTo = (path) => {
     navigate(path);
@@ -127,9 +125,12 @@ export default function Navbar() {
                   </div>
                 ) : (
                   <div>
-                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400" onClick={logoutHandle}>
-                        Logout
-                      </a>
+                    <a
+                      class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400"
+                      onClick={logoutHandle}
+                    >
+                      Logout
+                    </a>
                   </div>
                 )}
               </div>

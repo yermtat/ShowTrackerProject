@@ -41,12 +41,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-//builder.Services.Configure<CookiePolicyOptions>(options =>
-//{
-//    options.MinimumSameSitePolicy = SameSiteMode.None;
-//    options.HttpOnly = HttpOnlyPolicy.Always;
-//    options.Secure = CookieSecurePolicy.Always;
-//});
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+    options.HttpOnly = HttpOnlyPolicy.Always;
+    options.Secure = CookieSecurePolicy.Always;
+});
 
 builder.Services.AddHttpClient("MyClient");
 
@@ -111,17 +111,17 @@ builder.Services.AddAuthentication(options =>
                         if (newTokens != null)
                         {
 
-                            var cookieOptions = new CookieOptions
-                            {
-                                Path = "/",
-                                HttpOnly = true,  // Cookie is only accessible via HTTP requests
-                                Secure = true,    // Cookie is only sent over HTTPS
-                                Expires = DateTime.UtcNow.AddDays(1), // Set cookie expiration
-                                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
-                            };
+                            //var cookieOptions = new CookieOptions
+                            //{
+                            //    Path = "/",
+                            //    HttpOnly = true,  // Cookie is only accessible via HTTP requests
+                            //    Secure = true,    // Cookie is only sent over HTTPS
+                            //    Expires = DateTime.UtcNow.AddDays(1), // Set cookie expiration
+                            //    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
+                            //};
 
-                            httpContext.Response.Cookies.Append("accessToken", newTokens.AccessToken, cookieOptions);
-                            httpContext.Response.Cookies.Append("refreshToken", newTokens.RefreshToken, cookieOptions);
+                            httpContext.Response.Cookies.Append("accessToken", newTokens.AccessToken);
+                            httpContext.Response.Cookies.Append("refreshToken", newTokens.RefreshToken);
 
 
                             httpContext.Request.Headers["Authorization"] = $"Bearer {newTokens.AccessToken}";
@@ -186,6 +186,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCookiePolicy();
 
 app.UseCors();
 

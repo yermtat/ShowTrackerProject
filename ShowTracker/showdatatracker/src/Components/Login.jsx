@@ -33,6 +33,8 @@ export default function Login() {
           },
         }
       );
+
+      localStorage.setItem("Username", fetchedData.data.username);
     } catch (ex) {}
 
     isAuthorized.setAuthState(true);

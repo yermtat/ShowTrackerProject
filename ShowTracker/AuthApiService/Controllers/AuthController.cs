@@ -63,20 +63,20 @@ public class AuthController : ControllerBase
             var cookieResfresh = new CookieHeaderValue("refreshToken", res.refreshToken);
 
             // Define the cookie options
-            var cookieOptions = new CookieOptions
-            {
-                Path = "/",
-                HttpOnly = true,  // Cookie is only accessible via HTTP requests
-                Secure = true,    // Cookie is only sent over HTTPS
-                Expires = res.refreshTokenExpireTime, // Set cookie expiration
-                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
-            };
+            //var cookieOptions = new CookieOptions
+            //{
+            //    Path = "/",
+            //    HttpOnly = true,  // Cookie is only accessible via HTTP requests
+            //    Secure = true,    // Cookie is only sent over HTTPS
+            //    Expires = res.refreshTokenExpireTime, // Set cookie expiration
+            //    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
+            //};
 
             // Set the cookie
-            Response.Cookies.Append("accessToken", res.accessToken, cookieOptions);
-            Response.Cookies.Append("refreshToken", res.refreshToken, cookieOptions);
+            Response.Cookies.Append("accessToken", res.accessToken);
+            Response.Cookies.Append("refreshToken", res.refreshToken);
 
-            return Ok(res);
+            return Ok( new { username = user.Username });
         }
         catch (Exception ex)
         {
@@ -105,6 +105,14 @@ public class AuthController : ControllerBase
         string refreshToken = Request.Cookies["refreshToken"];
 
         await _authService.LogOutAsync(new TokenDTO (accessToken, refreshToken));
+
+        //var cookieOptions = new CookieOptions
+        //{
+        //    Path = "/",
+        //    HttpOnly = true,  // Cookie is only accessible via HTTP requests
+        //    Secure = true,    // Cookie is only sent over HTTPS
+        //    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
+        //};
 
         Response.Cookies.Delete("accessToken");
         Response.Cookies.Delete("refreshToken");

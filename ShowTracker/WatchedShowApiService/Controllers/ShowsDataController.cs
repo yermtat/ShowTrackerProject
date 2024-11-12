@@ -39,7 +39,7 @@ public class ShowsDataController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("MarkWatched/{showId}/{seasonNumber}/{episodeNumber}")]
+    [HttpPost("MarkWatched/{showId}/{seasonNumber}/{episodeNumber}")]
     public async Task<IActionResult> MarkEpisodeWatchedAsync(int showId, int seasonNumber, int episodeNumber)
     {
         try { 
@@ -59,7 +59,7 @@ public class ShowsDataController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("GetWatchedShows")]
+    [HttpGet("GetWatchedShows")]
     public async Task<IActionResult> GetWatchedShowAsync()
     {
         try
