@@ -27,9 +27,39 @@ export default function ShowDetails() {
     }
   };
 
-  const handleEpisode = (episodeNumber, seasonNumber, isWatched) => {
-    console.log("checkbox");
-    console.log(isWatched);
+  const handleEpisode = async (episodeId, isWatched) => {
+    try {
+      let fetchedData;
+      if (isWatched) {
+        fetchedData = await axios.post(
+          `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.id}/${episodeId}`,
+          {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+          {
+            withCredentials: true, // передается в конфигурацию запроса
+          },
+          {
+            Accept: "*/*",
+            Host: "http://localhost:3000",
+          }
+        );
+      } else {
+        fetchedData = await axios.post(
+          `https://localhost:7028/api/v1/ShowsData/Unwatch/${show.id}/${episodeId}`,
+          {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+          {
+            withCredentials: true, // передается в конфигурацию запроса
+          },
+          {
+            Accept: "*/*",
+            Host: "http://localhost:3000",
+          }
+        );
+      }
+
+      console.log(fetchedData);
+    } catch (errors) {
+      console.log(errors);
+    }
   };
 
   return (
@@ -77,30 +107,25 @@ export default function ShowDetails() {
         <div className="border rounded-xl border-gray-600">
           <ul className="list-none">
             {show._embedded.episodes.map((episode) => (
-              <form onSubmit={handleEpisode}>
-                <li>
-                  <div className="m-5">
-                    <span className="m-5">
-                      {" "}
-                     {episode.season} x {episode.number}
-                    </span>
-                    <span className="m-5"> {episode.name}</span>
-                    <span className="m-5"> {episode.airdate}</span>
-                    
-            {isAuthorized.authState && (
+              <li>
+                <div className="m-5">
+                  <span className="m-5">
+                    {" "}
+                    {episode.season} x {episode.number}
+                  </span>
+                  <span className="m-5"> {episode.name}</span>
+                  <span className="m-5"> {episode.airdate}</span>
+
+                  {isAuthorized.authState && (
                     <input
                       type="checkbox"
                       onChange={(e) =>
-                        handleEpisode(
-                          episode.season,
-                          episode.number,
-                          e.target.checked
-                        )
+                        handleEpisode(episode.id, e.target.checked)
                       }
-                    />)}
-                  </div>
-                </li>
-              </form>
+                    />
+                  )}
+                </div>
+              </li>
             ))}
           </ul>
         </div>

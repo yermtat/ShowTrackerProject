@@ -39,15 +39,15 @@ public class ShowsDataController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("MarkWatched/{showId}/{seasonNumber}/{episodeNumber}")]
-    public async Task<IActionResult> MarkEpisodeWatchedAsync(int showId, int seasonNumber, int episodeNumber)
+    [HttpPost("MarkWatched/{showId}/{episodeId}")]
+    public async Task<IActionResult> MarkEpisodeWatchedAsync(int showId, int episodeId)
     {
         try { 
             var token = HttpContext.Request.Headers["Authorization"];
 
             token = token.ToString().Replace("Bearer ", "");
 
-            await _showTrackerService.MarkEpisodeWatchedAsync(showId, seasonNumber, episodeNumber, token);
+            await _showTrackerService.MarkEpisodeWatchedAsync(showId, episodeId, token);
 
             return Ok();
         }
@@ -57,6 +57,29 @@ public class ShowsDataController : ControllerBase
         }
 
     }
+
+    [Authorize]
+    [HttpPost("Unwatch/{showId}/{episodeId}")]
+    public async Task<IActionResult> UnwatchEpisodeAsync(int showId, int episodeId)
+    {
+        try
+        {
+            var token = HttpContext.Request.Headers["Authorization"];
+
+            token = token.ToString().Replace("Bearer ", "");
+
+            await _showTrackerService.UnwatchEpisodeAsync(showId, episodeId, token);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+    }
+
+
 
     [Authorize]
     [HttpGet("GetWatchedShows")]

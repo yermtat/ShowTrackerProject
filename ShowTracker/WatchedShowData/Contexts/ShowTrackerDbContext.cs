@@ -30,6 +30,8 @@ public partial class ShowTrackerDbContext : DbContext
             entity.HasOne(d => d.WatchedShow).WithMany(p => p.WatchedEpisodes)
                 .HasForeignKey(d => d.WatchedShowId)
                 .HasConstraintName("FK__WatchedEp__Watch__398D8EEE");
+
+            entity.Property(e => e.EpisodeId).IsRequired();
         });
 
         modelBuilder.Entity<WatchedShow>(entity =>
@@ -40,8 +42,6 @@ public partial class ShowTrackerDbContext : DbContext
             entity.Property(e => e.UserId).HasColumnName("UserID");
         });
 
-        OnModelCreatingPartial(modelBuilder);
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

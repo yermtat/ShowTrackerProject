@@ -35,10 +35,10 @@ export default function Login() {
       );
 
       localStorage.setItem("Username", fetchedData.data.username);
-    } catch (ex) {}
 
-    isAuthorized.setAuthState(true);
-    navigateTo("/home");
+      isAuthorized.setAuthState(true);
+      navigateTo("/home");
+    } catch (ex) {}
   };
 
   const navigateTo = (path) => {

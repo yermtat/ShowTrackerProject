@@ -27,7 +27,7 @@ public class ShowTrackerService : IShowTrackerService
         _tokenService = tokenService;
     }
 
-    public async Task MarkEpisodeWatchedAsync(int showId, int seasonNumber, int episodeNumber, string token)
+    public async Task MarkEpisodeWatchedAsync(int showId, int episodeId, string token)
     {
         try
         {
@@ -51,7 +51,7 @@ public class ShowTrackerService : IShowTrackerService
                 await _showTrackerContext.SaveChangesAsync();
             }
 
-            var watchedEpisode = new WatchedEpisode { WatchedShowId = watchedShow.Id, Season = seasonNumber, Episode = episodeNumber };
+            var watchedEpisode = new WatchedEpisode { WatchedShowId = watchedShow.Id, EpisodeId = episodeId };
             await _showTrackerContext.WatchedEpisodes.AddAsync(watchedEpisode);
             await _showTrackerContext.SaveChangesAsync();
 
@@ -115,4 +115,35 @@ public class ShowTrackerService : IShowTrackerService
         }
     }
 
+    public async Task UnwatchEpisodeAsync(int showId, int episodeId, string token)
+    {
+        try
+        {
+            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
+
+            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            var watchedShow = await _showTrackerContext.WatchedShows.FirstOrDefaultAsync(s => s.ShowId == showId && s.UserId == user.Id);
+
+            if (watchedShow == null)
+            {
+                throw new Exception("Show not found");
+            }
+
+            await _showTrackerContext.WatchedEpisodes.Where(e => e.EpisodeId == episodeId && e.WatchedShowId == watchedShow.Id).ExecuteDeleteAsync();
+
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+
+    }
 }
