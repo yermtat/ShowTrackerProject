@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export async function trendingLoader() {
   try {
     const url = "https://api.themoviedb.org/3/trending/tv/day?language=en-US";
@@ -24,9 +26,25 @@ export const showDetailsLoader = async ({ params }) => {
       method: "GET",
     };
 
-    const res = await fetch(url, options).then((response) => response.json());
-    console.log(res);
-    return res;
+    const showInfo = await fetch(url, options).then((response) =>
+      response.json()
+    );
+    console.log(showInfo);
+
+    const userWatchedData = await axios.get(
+      `https://localhost:7028/api/v1/ShowsData/GetInfo/${params.id}`,
+      {
+        withCredentials: true, // передается в конфигурацию запроса
+      },
+      {
+        Accept: "*/*",
+        Host: "http://localhost:3000",
+      }
+    );
+
+    console.log(userWatchedData.data);
+
+    return { showInfo: showInfo, userWatchedData: userWatchedData.data };
   } catch (error) {
     console.log(error);
   }

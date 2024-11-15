@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Text.Json;
 using WatchedShowService.Interfaces;
 
 namespace WatchedShowApiService.Controllers;
@@ -83,7 +84,7 @@ public class ShowsDataController : ControllerBase
 
     [Authorize]
     [HttpGet("GetWatchedShows")]
-    public async Task<IActionResult> GetWatchedShowAsync()
+    public async Task<IActionResult> GetWatchedShowsAsync()
     {
         try
         {
@@ -107,5 +108,29 @@ public class ShowsDataController : ControllerBase
     public async Task<IActionResult> GetWatchedEpisodes()
     {
         return Ok();
+    }
+
+    [Authorize]
+    [HttpGet("GetInfo/{showId}")]
+    public async Task<IActionResult> GetWatchedShowInfoAsync(int showId)
+    {
+        try
+        {
+
+
+        var token = HttpContext.Request.Headers["Authorization"];
+
+        token = token.ToString().Replace("Bearer ", "");
+
+        var res = await _showTrackerService.GetWatchedShowInfoAsync(showId, token);
+
+            return Ok(res);
+
+        } catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+
     }
 }

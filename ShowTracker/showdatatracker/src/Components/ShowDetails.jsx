@@ -10,7 +10,7 @@ export default function ShowDetails() {
   const handleClick = async () => {
     try {
       const fetchedData = await axios.post(
-        `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.id}`,
+        `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.showInfo.id}`,
         {}, // тело запроса, если оно не нужно, оставьте пустым объектом
         {
           withCredentials: true, // передается в конфигурацию запроса
@@ -32,7 +32,7 @@ export default function ShowDetails() {
       let fetchedData;
       if (isWatched) {
         fetchedData = await axios.post(
-          `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.id}/${episodeId}`,
+          `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.showInfo.id}/${episodeId}`,
           {}, // тело запроса, если оно не нужно, оставьте пустым объектом
           {
             withCredentials: true, // передается в конфигурацию запроса
@@ -44,7 +44,7 @@ export default function ShowDetails() {
         );
       } else {
         fetchedData = await axios.post(
-          `https://localhost:7028/api/v1/ShowsData/Unwatch/${show.id}/${episodeId}`,
+          `https://localhost:7028/api/v1/ShowsData/Unwatch/${show.showInfo.id}/${episodeId}`,
           {}, // тело запроса, если оно не нужно, оставьте пустым объектом
           {
             withCredentials: true, // передается в конфигурацию запроса
@@ -67,17 +67,17 @@ export default function ShowDetails() {
       <div class="flex justify-center items-center h-full w-full">
         <ul class="list-none flex">
           <li class=" m-10">
-            {show.image ? (
+            {show.showInfo.image ? (
               <img
                 className="w-full h-56 object-cover"
-                src={show.image.original}
-                alt={show.name}
+                src={show.showInfo.image.original}
+                alt={show.showInfo.name}
               />
             ) : (
               <img
                 className="w-full h-56 object-cover"
                 src="./bg.png"
-                alt={show.name}
+                alt={show.showInfo.name}
               />
             )}
           </li>
@@ -85,9 +85,13 @@ export default function ShowDetails() {
             <div class="block max-w-[18rem] rounded-lg border border-success-600 bg-transparent text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
               <div class="p-6">
                 <h5 class="mb-2 text-xl font-medium leading-tight text-success-600">
-                  {show.name} - {show.id}
+                  {show.showInfo.name} - {show.showInfo.id}
                 </h5>
-                <div dangerouslySetInnerHTML={{ __html: `${show.summary}` }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: `${show.showInfo.summary}`,
+                  }}
+                />
               </div>
             </div>
 
@@ -106,7 +110,7 @@ export default function ShowDetails() {
       <div>
         <div className="border rounded-xl border-gray-600">
           <ul className="list-none">
-            {show._embedded.episodes.map((episode) => (
+            {show.showInfo._embedded.episodes.map((episode) => (
               <li>
                 <div className="m-5">
                   <span className="m-5">
@@ -119,6 +123,12 @@ export default function ShowDetails() {
                   {isAuthorized.authState && (
                     <input
                       type="checkbox"
+                      defaultChecked={
+                        show.userWatchedData.showId === show.ShowInfo.Id &&
+                        show.userWatchedData.watchedEpisodes.includes(
+                          episode.id
+                        )
+                      }
                       onChange={(e) =>
                         handleEpisode(episode.id, e.target.checked)
                       }

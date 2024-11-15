@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using AuthData.DTO;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.CookiePolicy;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 
 builder.Services.AddDbContext<AuthContext>(options => 
 {
@@ -188,7 +192,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCookiePolicy();
-
 app.UseCors();
 
 app.UseHttpsRedirection();
