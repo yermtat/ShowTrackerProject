@@ -133,4 +133,28 @@ public class ShowsDataController : ControllerBase
 
 
     }
+
+    [Authorize]
+    [HttpPost("Unwatch/{showId}")]
+    public async Task<IActionResult> UnwatchShowAsync(int showId)
+    {
+        try
+        {
+
+
+            var token = HttpContext.Request.Headers["Authorization"];
+
+            token = token.ToString().Replace("Bearer ", "");
+
+            await _showTrackerService.UnwatchShowAsync(showId, token);
+
+            return Ok();
+
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 }

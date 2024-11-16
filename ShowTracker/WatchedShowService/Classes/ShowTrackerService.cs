@@ -180,4 +180,31 @@ public class ShowTrackerService : IShowTrackerService
             throw ex;
         }
     }
+
+    public async Task UnwatchShowAsync(int showId, string token)
+    {
+        try
+        {
+
+
+            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
+
+            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            
+
+            await _showTrackerContext.WatchedShows.Where(s => s.ShowId == showId).ExecuteDeleteAsync();
+
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
 }

@@ -2,12 +2,18 @@ import React, { useContext } from "react";
 import { useLoaderData } from "react-router-dom";
 import { authContext } from "./MainWindow";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function ShowDetails() {
   const show = useLoaderData();
   const isAuthorized = useContext(authContext);
+  const navigate = useNavigate();
 
-  const handleClick = async () => {
+  const navigateTo = (path) => {
+    navigate(path);
+  };
+
+  const handleClickWatch = async () => {
     try {
       const fetchedData = await axios.post(
         `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.showInfo.id}`,
@@ -22,6 +28,29 @@ export default function ShowDetails() {
       );
 
       console.log(fetchedData);
+      navigateTo(`/showDetails/${show.showInfo.id}`);
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
+  const handleClickUnwatch = async () => {
+    try {
+      const fetchedData = await axios.post(
+        `https://localhost:7028/api/v1/ShowsData/Unwatch/${show.showInfo.id}`,
+        {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+        {
+          withCredentials: true, // передается в конфигурацию запроса
+        },
+        {
+          Accept: "*/*",
+          Host: "http://localhost:3000",
+        }
+      );
+
+      console.log(fetchedData);
+
+      navigateTo(`/showDetails/${show.showInfo.id}`);
     } catch (errors) {
       console.log(errors);
     }
@@ -97,10 +126,18 @@ export default function ShowDetails() {
 
             {isAuthorized.authState && (
               <button
-                onClick={handleClick}
+                onClick={
+                  show.userWatchedData.showId
+                    ? handleClickUnwatch
+                    : handleClickWatch
+                }
                 className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
               >
-                Add to watchlist
+                {show.userWatchedData.showId ? (
+                  <span>Unwatch</span>
+                ) : (
+                  <span>Add to watchlist</span>
+                )}
               </button>
             )}
           </li>
@@ -124,7 +161,7 @@ export default function ShowDetails() {
                     <input
                       type="checkbox"
                       defaultChecked={
-                        show.userWatchedData.showId === show.ShowInfo.Id &&
+                        show.userWatchedData.showId === show.showInfo.id &&
                         show.userWatchedData.watchedEpisodes.includes(
                           episode.id
                         )
