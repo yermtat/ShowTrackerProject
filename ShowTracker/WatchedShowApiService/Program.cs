@@ -133,7 +133,7 @@ builder.Services.AddAuthentication(options =>
                             httpContext.Response.Cookies.Append("refreshToken", newTokens.RefreshToken);
 
 
-                            //httpContext.Request.Headers["Authorization"] = $"Bearer {newTokens.AccessToken}";
+                            httpContext.Request.Headers["Authorization"] = $"Bearer {newTokens.AccessToken}";
 
                             //context.HttpContext.Features.Set(
                             //    new TokenValidatedContext(context.HttpContext, context.Scheme, context.Options)
@@ -143,26 +143,38 @@ builder.Services.AddAuthentication(options =>
                             //    });
 
 
-                            var originalRequest = httpContext.Request;
-                            var retryClient = httpContext.RequestServices.GetRequiredService<IHttpClientFactory>().CreateClient();
+                            //var originalRequest = httpContext.Request;
+                            //var retryClient = httpContext.RequestServices.GetRequiredService<IHttpClientFactory>().CreateClient();
 
-                            // Создаем новый запрос с обновленным accessToken
-                            var retryRequest = new HttpRequestMessage(new HttpMethod(originalRequest.Method), originalRequest.GetDisplayUrl())
+                            //// Создаем новый запрос с обновленным accessToken
+                            //var retryRequest = new HttpRequestMessage(new HttpMethod(originalRequest.Method), originalRequest.GetDisplayUrl())
+                            //{
+                            //    Content = originalRequest.HasFormContentType
+                            //              ? new FormUrlEncodedContent(originalRequest.Form.ToDictionary(x => x.Key, x => x.Value.ToString()))
+                            //              : null
+                            //};
+                            //retryRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newTokens.AccessToken);
+
+                            //// Выполняем повторный запрос
+                            //var retryResponse = await retryClient.SendAsync(retryRequest);
+
+                            //// Завершаем текущий pipeline с результатом повторного запроса
+                            //httpContext.Response.StatusCode = (int)retryResponse.StatusCode;
+                            //await retryResponse.Content.CopyToAsync(httpContext.Response.Body);
+
+
+                            // Повторно валидируем токен
+                            var tokenHandler = new JwtSecurityTokenHandler();
+                            var validationParameters = context.Options.TokenValidationParameters;
+
+                            var principal = tokenHandler.ValidateToken(newTokens.AccessToken, validationParameters, out var validatedToken);
+
+                            if (validatedToken is JwtSecurityToken jwt && jwt.RawData == newTokens.AccessToken)
                             {
-                                Content = originalRequest.HasFormContentType
-                                          ? new FormUrlEncodedContent(originalRequest.Form.ToDictionary(x => x.Key, x => x.Value.ToString()))
-                                          : null
-                            };
-                            retryRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newTokens.AccessToken);
+                                httpContext.User = principal; // Устанавливаем Principal в HttpContext
+                                return; // Продолжаем обработку запроса
+                            }
 
-                            // Выполняем повторный запрос
-                            var retryResponse = await retryClient.SendAsync(retryRequest);
-
-                            // Завершаем текущий pipeline с результатом повторного запроса
-                            httpContext.Response.StatusCode = (int)retryResponse.StatusCode;
-                            await retryResponse.Content.CopyToAsync(httpContext.Response.Body);
-
-                            return;
                         }
 
                     }

@@ -130,12 +130,17 @@ builder.Services.AddAuthentication(options =>
 
                             httpContext.Request.Headers["Authorization"] = $"Bearer {newTokens.AccessToken}";
 
-                            context.HttpContext.Features.Set(
-                                new TokenValidatedContext(context.HttpContext, context.Scheme, context.Options)
-                                {
-                                    Principal = context.Principal,
-                                    SecurityToken = new JwtSecurityToken(newTokens.AccessToken)
-                                });
+                            // Повторно валидируем токен
+                            var tokenHandler = new JwtSecurityTokenHandler();
+                            var validationParameters = context.Options.TokenValidationParameters;
+
+                            var principal = tokenHandler.ValidateToken(newTokens.AccessToken, validationParameters, out var validatedToken);
+
+                            if (validatedToken is JwtSecurityToken jwt && jwt.RawData == newTokens.AccessToken)
+                            {
+                                httpContext.User = principal; // Устанавливаем Principal в HttpContext
+                                return; // Продолжаем обработку запроса
+                            }
                         }
                     }
                 }
