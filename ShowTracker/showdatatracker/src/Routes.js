@@ -3,7 +3,11 @@ import MainWindow from "./Components/MainWindow";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Myshows from "./Components/Myshows";
-import { showDetailsLoader, trendingLoader } from "./Actions/Loaders";
+import {
+  myShowsLoader,
+  showDetailsLoader,
+  trendingLoader,
+} from "./Actions/Loaders";
 import ShowDetails from "./Components/ShowDetails";
 
 const children = [
@@ -28,6 +32,7 @@ const children = [
   {
     path: "myshows",
     element: <Myshows />,
+    loader: myShowsLoader,
   },
   {
     path: "showDetails/:id",
