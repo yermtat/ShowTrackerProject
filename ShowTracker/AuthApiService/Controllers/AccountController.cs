@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AuthData.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -24,22 +25,73 @@ public class AccountController : ControllerBase
     [HttpPost("ConfirmEmail")]
     public async Task<IActionResult> ConfirmEmailAsync()
     {
-        var token = HttpContext.Request.Headers["Authorization"];
+        try
+        {
+            var token = HttpContext.Request.Headers["Authorization"];
 
-        token = token.ToString().Replace("Bearer ", "");
+            token = token.ToString().Replace("Bearer ", "");
 
-        await _accountService.ConfirmEmailAsync(token);
+            await _accountService.ConfirmEmailAsync(token);
 
-        return Ok();
+            return Ok();
+        }
+        catch (Exception ex) 
+        { 
+            return BadRequest(ex.Message); 
+        }
     }
 
     [HttpGet("ValidateConfirmation")]
     public async Task<IActionResult> ValidateConfirmationAsync([FromQuery] string token, [FromQuery] string userId)
     {
-
+        try { 
         await _tokenService.ValidateEmailTokenAsync(token, userId);
 
         return Ok("Email confirmed successfully");
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    [Authorize]
+    [HttpGet("IsEmailConfirmed")]
+    public async Task<IActionResult> IsEmailConfirmed()
+    {
+        try
+        {
+            var token = HttpContext.Request.Headers["Authorization"];
+
+            token = token.ToString().Replace("Bearer ", "");
+
+            var res = await _accountService.IsEmailConfirmed(token);
+
+            return Ok(res);
+        }
+        catch (Exception ex) 
+        {
+            return BadRequest(ex.Message);  
+        }
+    }
+
+    [Authorize]
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordDTO resetRequest)
+    {
+        try
+        {
+            var token = HttpContext.Request.Headers["Authorization"];
+
+            token = token.ToString().Replace("Bearer ", "");
+
+            await _accountService.ResetPaswordAsync(resetRequest, token);
+            return Ok("Recovery confirmation sent to your email");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
 }

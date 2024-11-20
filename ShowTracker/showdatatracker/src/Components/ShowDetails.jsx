@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 import { authContext } from "./MainWindow";
 import axios from "axios";
@@ -12,6 +12,29 @@ export default function ShowDetails() {
   const navigateTo = (path) => {
     navigate(path);
   };
+
+  useEffect(() => {
+    // Убедитесь, что kbox доступен
+    const loadScript = () => {
+      const script = document.createElement("script");
+      script.src = "https://kinobox.tv/kinobox.min.js";
+      script.async = true;
+      script.onload = () => {
+        if (window.kbox) {
+          window.kbox(".kinobox_player", {
+            search: { title: show.showInfo.name },
+          });
+        }
+      };
+      document.body.appendChild(script);
+    };
+
+    if (!window.kbox) {
+      loadScript();
+    } else {
+      window.kbox(".kinobox_player", { search: { title: show.showInfo.name } });
+    }
+  }, [show]); // Обновлять при изменении названия фильма
 
   const handleClickWatch = async () => {
     try {
@@ -176,6 +199,13 @@ export default function ShowDetails() {
             ))}
           </ul>
         </div>
+      </div>
+
+      <div className="flex flex-col items-center p-4 bg-gray-100 rounded-md shadow-md">
+        <h1 className="text-xl font-bold mb-4 text-gray-800">
+          Результаты поиска: {show.showInfo.name}
+        </h1>
+        <div className="kinobox_player w-full max-w-lg bg-white rounded-md shadow-md"></div>
       </div>
     </div>
   );

@@ -69,7 +69,9 @@ export default function Home() {
                   className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3"
                   type="button"
                   onClick={handleClick}
-                ></button>
+                >
+                  Search
+                </button>
 
                 <Modal
                   isOpen={modalIsOpen}

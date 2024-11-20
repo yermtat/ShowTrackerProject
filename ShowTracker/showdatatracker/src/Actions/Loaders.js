@@ -85,3 +85,23 @@ export const myShowsLoader = async () => {
     console.log(error);
   }
 };
+
+export const settingsLoader = async () => {
+  try {
+    const res = await axios.get(
+      `https://localhost:7015/api/v1/Account/IsEmailConfirmed`,
+      {
+        withCredentials: true, // передается в конфигурацию запроса
+      },
+      {
+        Accept: "*/*",
+        Host: "http://localhost:3000",
+      }
+    );
+
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

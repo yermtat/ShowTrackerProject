@@ -85,6 +85,7 @@ builder.Services.AddAuthentication(options =>
             if (!string.IsNullOrEmpty(accessToken))
             {
                 context.Token = accessToken;
+                context.HttpContext.Request.Headers["Authorization"] = $"Bearer {accessToken}";
             }
 
             return Task.CompletedTask;

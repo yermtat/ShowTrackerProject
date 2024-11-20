@@ -32,7 +32,8 @@ public class EmailSender : IEmailSender
         {
             From = new MailAddress(_configuration["Email:Username"]),
             Subject = subject,
-            Body = message
+            Body = message,
+            IsBodyHtml = true
         };
 
         mailMessage.To.Add(email);

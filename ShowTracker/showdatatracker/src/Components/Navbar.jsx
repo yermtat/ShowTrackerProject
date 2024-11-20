@@ -131,6 +131,11 @@ export default function Navbar() {
                     >
                       Logout
                     </a>
+                    <Link to="/settings">
+                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400 m-1">
+                        Settings
+                      </a>
+                    </Link>
                   </div>
                 )}
               </div>

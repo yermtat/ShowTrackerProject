@@ -38,7 +38,10 @@ export default function Login() {
 
       isAuthorized.setAuthState(true);
       navigateTo("/home");
-    } catch (ex) {}
+    } catch (ex) {
+      console.log(ex);
+      return alert("Wrong username or password");
+    }
   };
 
   const navigateTo = (path) => {

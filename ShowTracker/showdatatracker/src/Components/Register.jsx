@@ -1,8 +1,11 @@
 import React from "react";
 import { useRef } from "react";
 import { json } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const refUsername = useRef();
   const refPassword = useRef();
   const refEmail = useRef();
@@ -28,6 +31,11 @@ export default function Register() {
 
     const data = await fetchedData.json();
     console.log(data);
+    navigateTo("/login");
+  };
+
+  const navigateTo = (path) => {
+    navigate(path);
   };
 
   return (

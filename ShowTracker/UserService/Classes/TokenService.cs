@@ -33,7 +33,7 @@ public class TokenService : ITokenService
             Subject = new ClaimsIdentity(new[] {
                 new Claim(ClaimTypes.NameIdentifier, userId)
             }),
-            Expires = DateTime.UtcNow.AddMinutes(5),
+            Expires = DateTime.UtcNow.AddMinutes(15),
             Issuer = _config.GetSection("EmailJwt:Issuer").Value,
             Audience = _config.GetSection("EmailJwt:Audience").Value,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
