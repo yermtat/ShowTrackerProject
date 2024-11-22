@@ -13,6 +13,19 @@ export default function ShowDetails() {
     navigate(path);
   };
 
+  // const player = new PJSPlayer("#pjsdiv"); // Создание экземпляра плеера (пример)
+
+  // // Получаем текущее время через объект плеера
+  // function getCurrentTime() {
+  //   if (player && player.video) {
+  //     console.log("Текущее время видео:", player.video.currentTime);
+  //     return player.video.currentTime; // Время в секундах
+  //   } else {
+  //     console.error("Плеер или видео не инициализированы.");
+  //     return null;
+  //   }
+  // }
+
   useEffect(() => {
     // Убедитесь, что kbox доступен
     const loadScript = () => {

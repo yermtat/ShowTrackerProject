@@ -31,18 +31,24 @@ export const showDetailsLoader = async ({ params }) => {
     );
     console.log(showInfo);
 
-    const userWatchedData = await axios.get(
-      `https://localhost:7028/api/v1/ShowsData/GetInfo/${params.id}`,
-      {
-        withCredentials: true, // передается в конфигурацию запроса
-      },
-      {
-        Accept: "*/*",
-        Host: "http://localhost:3000",
-      }
-    );
+    let userWatchedData;
 
-    console.log(userWatchedData.data);
+    try {
+      userWatchedData = await axios.get(
+        `https://localhost:7028/api/v1/ShowsData/GetInfo/${params.id}`,
+        {
+          withCredentials: true, // передается в конфигурацию запроса
+        },
+        {
+          Accept: "*/*",
+          Host: "http://localhost:3000",
+        }
+      );
+
+      console.log(userWatchedData.data);
+    } catch {
+      return { showInfo: showInfo, userWatchedData: null };
+    }
 
     return { showInfo: showInfo, userWatchedData: userWatchedData.data };
   } catch (error) {
