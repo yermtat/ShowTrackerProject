@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using UserService.Classes;
@@ -31,32 +32,27 @@ public class AuthController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO user)
     {
-        try { 
+
         var validationRes = _registerUserValidator.Validate(user);
         if (!validationRes.IsValid)
         {
-            return BadRequest(validationRes.Errors);
+            throw new Exception(validationRes.Errors[0].ErrorMessage);
         }
 
         var res = await _authService.RegisterUserAsync(user);
         return Ok(res);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+
     }
 
     [AllowAnonymous]
     [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDTO user)
     {
-        try
-        {
+
             var validationRes = _loginUserValidador.Validate(user);
             if (!validationRes.IsValid)
             {
-                return BadRequest(validationRes.Errors);
+                throw new Exception("Wrong login or password");
             }
 
             var res = await _authService.LoginUserAsync(user);
@@ -66,11 +62,7 @@ public class AuthController : ControllerBase
             Response.Cookies.Append("username", res.userName);
 
             return Ok( new { username = user.Username });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        
     }
 
 

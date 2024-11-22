@@ -32,16 +32,19 @@ export default function Navbar() {
 
   return (
     <div>
-      <nav class="bg-black p-4 w-screen">
-        <div class="container mx-auto flex flex-col lg:flex-row justify-between items-center">
-          <div class="text-white font-bold text-3xl mb-4 lg:mb-0 transition-colors duration-300 hover:text-orange-600 hover:cursor-pointer">
+      <nav className="bg-black p-4 w-screen">
+        <div className="container mx-auto flex flex-col lg:flex-row justify-between items-center">
+          <div className="text-white font-bold text-3xl mb-4 lg:mb-0 transition-colors duration-300 hover:text-orange-600 hover:cursor-pointer">
             ShowTracker
           </div>
 
-          <div class="lg:hidden">
-            <button onClick={toggleMenu} class="text-white focus:outline-none">
+          <div className="lg:hidden">
+            <button
+              onClick={toggleMenu}
+              className="text-white focus:outline-none"
+            >
               <svg
-                class="h-6 w-6"
+                className="h-6 w-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -63,21 +66,21 @@ export default function Navbar() {
             } lg:space-x-4 lg:mt-0 mt-4 flex flex-col items-center text-xl`}
           >
             <Link to="/home">
-              <a
+              <div
                 href="/"
-                class="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
+                className="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
               >
                 Home
-              </a>
+              </div>
             </Link>
             {isAuthorized.authState && (
               <Link to="/myshows">
-                <a
+                <div
                   href="/"
-                  class="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
+                  className="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
                 >
                   My shows
-                </a>
+                </div>
               </Link>
             )}
           </div>
@@ -88,15 +91,15 @@ export default function Navbar() {
                 <button>
                   {" "}
                   <svg
-                    class="h-6 w-6 text-white duration-300 hover:text-orange-600"
+                    className="h-6 w-6 text-white duration-300 hover:text-orange-600"
                     width="20"
                     height="20"
                     viewBox="0 0 24 24"
-                    stroke-width="2"
+                    strokeWidth="2"
                     stroke="currentColor"
                     fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
                     {" "}
                     <path stroke="none" d="M0 0h24v24H0z" />{" "}
@@ -113,28 +116,28 @@ export default function Navbar() {
                 {!isAuthorized.authState ? (
                   <div>
                     <Link to="/login">
-                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400 m-1">
+                      <div className="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400">
                         Login
-                      </a>
+                      </div>
                     </Link>
                     <Link to="/register">
-                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400 margin-10px m-1">
+                      <div className="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400 margin-10px">
                         Register
-                      </a>
+                      </div>
                     </Link>
                   </div>
                 ) : (
                   <div>
-                    <a
-                      class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400"
+                    <div
+                      className="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400 cursor-pointer"
                       onClick={logoutHandle}
                     >
                       Logout
-                    </a>
+                    </div>
                     <Link to="/settings">
-                      <a class="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400 m-1">
+                      <div className="transition-colors duration-300 text-deep-purple-accent-400 hover:text-orange-400">
                         Settings
-                      </a>
+                      </div>
                     </Link>
                   </div>
                 )}
@@ -142,15 +145,15 @@ export default function Navbar() {
             </Popup>
 
             <svg
-              class="h-6 w-6 text-white duration-300 hover:text-orange-600 hover:cursor-pointer"
+              className="h-6 w-6 text-white duration-300 hover:text-orange-600 hover:cursor-pointer"
               width="20"
               height="20"
               viewBox="0 0 24 24"
-              stroke-width="2"
+              strokeWidth="2"
               stroke="currentColor"
               fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               {" "}
               <path stroke="none" d="M0 0h24v24H0z" />{" "}

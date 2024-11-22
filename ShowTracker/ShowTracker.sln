@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WatchedShowApiService", "Wa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchedShowService", "WatchedShowService\WatchedShowService.csproj", "{0D804479-F2C8-4074-B5E9-8061BD3EC814}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExceptionService", "ExceptionService\ExceptionService.csproj", "{89FD3D29-78EC-4824-833E-26AAE4EF6D36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{0D804479-F2C8-4074-B5E9-8061BD3EC814}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D804479-F2C8-4074-B5E9-8061BD3EC814}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D804479-F2C8-4074-B5E9-8061BD3EC814}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89FD3D29-78EC-4824-833E-26AAE4EF6D36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89FD3D29-78EC-4824-833E-26AAE4EF6D36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89FD3D29-78EC-4824-833E-26AAE4EF6D36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89FD3D29-78EC-4824-833E-26AAE4EF6D36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{2EC5A897-DBB2-486D-915B-3EE3BE68CE21} = {D09BF9BB-AA09-4D8E-811D-1767BE293880}
 		{8513E394-AEB1-4FCC-84FB-C84331E5162A} = {C3BF3A08-DA97-4740-A25F-BAA9003D8AF2}
 		{0D804479-F2C8-4074-B5E9-8061BD3EC814} = {C3BF3A08-DA97-4740-A25F-BAA9003D8AF2}
+		{89FD3D29-78EC-4824-833E-26AAE4EF6D36} = {C3BF3A08-DA97-4740-A25F-BAA9003D8AF2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85C3322A-A30E-4BCC-AA69-476E55D38254}

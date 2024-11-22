@@ -33,17 +33,6 @@ export default function Home() {
     };
     var res = await fetch(url, options).then((response) => response.json());
 
-    //     const url = `https://api.themoviedb.org/3/search/tv?query=${search}&include_adult=false&language=en-US&page=1`;
-    //     const options = {
-    //   method: 'GET',
-    //   headers: {
-    //     accept: 'application/json',
-    //     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2MWNkNzk5ZDZlMjY1NTJmMjMzYzQ5NTdlNDljYzY2NSIsIm5iZiI6MTcyOTc3NDYxOC41NjM4NjIsInN1YiI6IjY3MDEzODZlZmEzZTY5ZTBlZjdjZmRkYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.S5H5On7YwdvZ41xF-9Ns6oJPpgHJBjIbVhC3QqOKMoY'
-    //   }
-    // };
-
-    // var res = await fetch(url, options).then((res) => res.json());
-
     setShows(res);
 
     setIsOpen(true);
@@ -83,7 +72,7 @@ export default function Home() {
                   <div className="w-full flex flex-wrap">
                     {Array.isArray(shows) && shows.length > 0 ? (
                       shows.map((show) => (
-                        <div>
+                        <div key={show.show.id}>
                           <Link to={`/showDetails/${show.show.id}`}>
                             <div className="w-48 bg-gray-800 rounded-lg overflow-hidden shadow-lg text-white m-10">
                               {show.show.image ? (
@@ -131,7 +120,10 @@ export default function Home() {
         <Slider {...settings}>
           {trendingShows &&
             trendingShows.results.map((show) => (
-              <div className="max-w-xs rounded overflow-hidden shadow-lg bg-gray-800 text-white">
+              <div
+                key={show.id}
+                className="max-w-xs rounded overflow-hidden shadow-lg bg-gray-800 text-white"
+              >
                 <img
                   className="w-full h-48 object-cover"
                   src={`https://image.tmdb.org/t/p/w500/${show.poster_path}`}

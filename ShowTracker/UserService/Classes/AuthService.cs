@@ -28,8 +28,7 @@ public class AuthService : IAuthService
 
     public async Task<AccessInfoDTO> LoginUserAsync(LoginDTO user)
     {
-        try
-        {
+
             var foundUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
 
             if (foundUser == null)
@@ -55,11 +54,7 @@ public class AuthService : IAuthService
             await _context.SaveChangesAsync();
 
             return tokenData;
-        }
-        catch
-        {
-            throw;
-        }
+
     }
 
     public async Task LogOutAsync(TokenDTO userTokenInfo)
@@ -117,8 +112,7 @@ public class AuthService : IAuthService
 
     public async Task<User> RegisterUserAsync(RegisterDTO user)
     {
-        try
-        {
+
             var newUser = new User
             {
                 Username = user.Username,
@@ -130,11 +124,5 @@ public class AuthService : IAuthService
             await _context.SaveChangesAsync();
 
             return newUser;
-
-        }
-        catch
-        {
-            throw;
-        }
     }
 }

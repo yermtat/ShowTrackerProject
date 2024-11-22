@@ -115,8 +115,6 @@ public class TokenService : ITokenService
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
 
-        try
-        {
             var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
 
             var Id = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -141,10 +139,6 @@ public class TokenService : ITokenService
             user.IsEmailConfirmed = true;
 
             await _context.SaveChangesAsync();
-        }
-        catch
-        {
-            throw;
-        }
+
     }
 }

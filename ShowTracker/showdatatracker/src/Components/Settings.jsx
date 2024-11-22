@@ -17,7 +17,7 @@ export default function Settings() {
         `https://localhost:7015/api/v1/Account/ConfirmEmail`,
         {},
         {
-          withCredentials: true, // передается в конфигурацию запроса
+          withCredentials: true,
         },
         {
           Accept: "*/*",
@@ -25,11 +25,9 @@ export default function Settings() {
         }
       );
 
-      console.log(res);
-
       return alert("Confirmation is send");
-    } catch (ex) {
-      console.log(ex);
+    } catch (error) {
+      return alert(error.response.data.error);
     }
   };
 
@@ -49,7 +47,7 @@ export default function Settings() {
           confirmNewPassword: confirmNewPassword,
         },
         {
-          withCredentials: true, // передается в конфигурацию запроса
+          withCredentials: true,
         },
         {
           Accept: "*/*",
@@ -59,8 +57,8 @@ export default function Settings() {
 
       setIsOpen(false);
       return alert("Confirmation is send");
-    } catch (ex) {
-      return alert("Password wasn't reseted");
+    } catch (error) {
+      return alert(error.response.data.error);
     }
   };
 

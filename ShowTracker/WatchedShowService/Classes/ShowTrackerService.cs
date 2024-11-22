@@ -30,8 +30,6 @@ public class ShowTrackerService : IShowTrackerService
 
     public async Task MarkEpisodeWatchedAsync(int showId, int episodeId, string username)
     {
-        try
-        {
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -43,29 +41,18 @@ public class ShowTrackerService : IShowTrackerService
 
             if (watchedShow == null)
             {
-                watchedShow = new WatchedShow { ShowId = showId, UserId = user.Id };
-                await _showTrackerContext.WatchedShows.AddAsync(watchedShow);
-                await _showTrackerContext.SaveChangesAsync();
+                throw new Exception("Add to watchlist first");
             }
 
             var watchedEpisode = new WatchedEpisode { WatchedShowId = watchedShow.Id, EpisodeId = episodeId };
             await _showTrackerContext.WatchedEpisodes.AddAsync(watchedEpisode);
             await _showTrackerContext.SaveChangesAsync();
 
-
-
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
-
     }
 
     public async Task MarkShowWatchedAsync(int showId, string username)
     {
-        try
-        {
+
 
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
@@ -78,17 +65,11 @@ public class ShowTrackerService : IShowTrackerService
             await _showTrackerContext.WatchedShows.AddAsync(watchedShow);
             await _showTrackerContext.SaveChangesAsync();
 
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
     }
 
     public async Task<List<int>> GetWatchedShowsIdAsync(string username)
     {
-        try
-        {
+
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -99,17 +80,12 @@ public class ShowTrackerService : IShowTrackerService
             var shows = _showTrackerContext.WatchedShows.Where(u => u.UserId == user.Id).Select(s => s.ShowId).ToList();
 
             return shows;
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+
     }
 
     public async Task UnwatchEpisodeAsync(int showId, int episodeId, string username)
     {
-        try
-        {
+
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -126,18 +102,12 @@ public class ShowTrackerService : IShowTrackerService
 
             await _showTrackerContext.WatchedEpisodes.Where(e => e.EpisodeId == episodeId && e.WatchedShowId == watchedShow.Id).ExecuteDeleteAsync();
 
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
 
     }
 
     public async Task<WatchedShowDTO> GetWatchedShowInfoAsync(int showId, string username)
     {
-        try
-        {
+
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -153,17 +123,11 @@ public class ShowTrackerService : IShowTrackerService
 
             return new WatchedShowDTO(showId, episodes);
 
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
     }
 
     public async Task UnwatchShowAsync(int showId, string username)
     {
-        try
-        {
+
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -174,10 +138,5 @@ public class ShowTrackerService : IShowTrackerService
 
             await _showTrackerContext.WatchedShows.Where(s => s.ShowId == showId).ExecuteDeleteAsync();
 
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
     }
 }

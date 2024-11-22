@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.CookiePolicy;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using ExceptionService.Middlwares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -187,6 +188,7 @@ builder.Services.AddScoped<LoginUserValidator>();
 builder.Services.AddScoped<RegisterUserValidator>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
+builder.Services.AddScoped<GlobalExceptionMiddleware>();
 
 var app = builder.Build();
 
@@ -201,6 +203,7 @@ app.UseCookiePolicy();
 app.UseCors();
 
 app.UseHttpsRedirection();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

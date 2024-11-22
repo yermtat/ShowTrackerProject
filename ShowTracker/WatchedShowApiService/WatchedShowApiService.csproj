@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AuthData\AuthData.csproj" />
+    <ProjectReference Include="..\ExceptionService\ExceptionService.csproj" />
     <ProjectReference Include="..\WatchedShowData\WatchedShowData.csproj" />
     <ProjectReference Include="..\WatchedShowService\WatchedShowService.csproj" />
   </ItemGroup>

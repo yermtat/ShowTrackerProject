@@ -13,19 +13,6 @@ export default function ShowDetails() {
     navigate(path);
   };
 
-  // const player = new PJSPlayer("#pjsdiv"); // Создание экземпляра плеера (пример)
-
-  // // Получаем текущее время через объект плеера
-  // function getCurrentTime() {
-  //   if (player && player.video) {
-  //     console.log("Текущее время видео:", player.video.currentTime);
-  //     return player.video.currentTime; // Время в секундах
-  //   } else {
-  //     console.error("Плеер или видео не инициализированы.");
-  //     return null;
-  //   }
-  // }
-
   useEffect(() => {
     // Убедитесь, что kbox доступен
     const loadScript = () => {
@@ -63,10 +50,9 @@ export default function ShowDetails() {
         }
       );
 
-      console.log(fetchedData);
       navigateTo(`/showDetails/${show.showInfo.id}`);
-    } catch (errors) {
-      console.log(errors);
+    } catch (error) {
+      return alert(error.response.data.error);
     }
   };
 
@@ -84,11 +70,9 @@ export default function ShowDetails() {
         }
       );
 
-      console.log(fetchedData);
-
       navigateTo(`/showDetails/${show.showInfo.id}`);
-    } catch (errors) {
-      console.log(errors);
+    } catch (error) {
+      return alert(error.response.data.error);
     }
   };
 
@@ -98,9 +82,9 @@ export default function ShowDetails() {
       if (isWatched) {
         fetchedData = await axios.post(
           `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.showInfo.id}/${episodeId}`,
-          {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+          {},
           {
-            withCredentials: true, // передается в конфигурацию запроса
+            withCredentials: true,
           },
           {
             Accept: "*/*",
@@ -110,9 +94,9 @@ export default function ShowDetails() {
       } else {
         fetchedData = await axios.post(
           `https://localhost:7028/api/v1/ShowsData/Unwatch/${show.showInfo.id}/${episodeId}`,
-          {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+          {},
           {
-            withCredentials: true, // передается в конфигурацию запроса
+            withCredentials: true,
           },
           {
             Accept: "*/*",
@@ -120,10 +104,8 @@ export default function ShowDetails() {
           }
         );
       }
-
-      console.log(fetchedData);
-    } catch (errors) {
-      console.log(errors);
+    } catch (error) {
+      return alert(error.response.data.error);
     }
   };
 
@@ -202,6 +184,7 @@ export default function ShowDetails() {
                           episode.id
                         )
                       }
+                      disabled={!show.userWatchedData.showId}
                       onChange={(e) =>
                         handleEpisode(episode.id, e.target.checked)
                       }

@@ -24,7 +24,6 @@ public class ShowsDataController : ControllerBase
     public async Task<IActionResult> MarkShowWatchedAsync(int ShowId )
     {
 
-        try {
 
          var username = HttpContext.Request.Cookies["username"];
 
@@ -32,27 +31,18 @@ public class ShowsDataController : ControllerBase
 
          return Ok();
          
-        }catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
 
     [Authorize]
     [HttpPost("MarkWatched/{showId}/{episodeId}")]
     public async Task<IActionResult> MarkEpisodeWatchedAsync(int showId, int episodeId)
     {
-        try {
+
             var username = HttpContext.Request.Cookies["username"];
 
             await _showTrackerService.MarkEpisodeWatchedAsync(showId, episodeId, username);
 
             return Ok();
-        }
-        catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
 
     }
 
@@ -60,18 +50,13 @@ public class ShowsDataController : ControllerBase
     [HttpPost("Unwatch/{showId}/{episodeId}")]
     public async Task<IActionResult> UnwatchEpisodeAsync(int showId, int episodeId)
     {
-        try
-        {
+
             var username = HttpContext.Request.Cookies["username"];
 
             await _showTrackerService.UnwatchEpisodeAsync(showId, episodeId, username);
 
             return Ok();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+
 
     }
 
@@ -81,38 +66,25 @@ public class ShowsDataController : ControllerBase
     [HttpGet("GetWatchedShows")]
     public async Task<IActionResult> GetWatchedShowsAsync()
     {
-        try
-        {
+
             var username = HttpContext.Request.Cookies["username"];
 
             var res = await _showTrackerService.GetWatchedShowsIdAsync(username);
 
             return Ok(res);
 
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+
     }
 
     [Authorize]
     [HttpGet("GetInfo/{showId}")]
     public async Task<IActionResult> GetWatchedShowInfoAsync(int showId)
     {
-        try
-        {
             var username = HttpContext.Request.Cookies["username"];
 
             var res = await _showTrackerService.GetWatchedShowInfoAsync(showId, username);
 
             return Ok(res);
-
-        } catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-
 
     }
 
@@ -120,19 +92,13 @@ public class ShowsDataController : ControllerBase
     [HttpPost("Unwatch/{showId}")]
     public async Task<IActionResult> UnwatchShowAsync(int showId)
     {
-        try
-        {
+
             var username = HttpContext.Request.Cookies["username"];
 
             await _showTrackerService.UnwatchShowAsync(showId, username);
 
             return Ok();
 
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
 
 }

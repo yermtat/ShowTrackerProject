@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http;
+using ExceptionService.Middlwares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -217,6 +218,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IShowTrackerService, ShowTrackerService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<GlobalExceptionMiddleware>();
 
 var app = builder.Build();
 
@@ -232,6 +234,7 @@ app.UseCookiePolicy();
 app.UseCors();
 
 app.UseHttpsRedirection();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

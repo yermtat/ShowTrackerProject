@@ -2,6 +2,7 @@ import React from "react";
 import { useRef } from "react";
 import { json } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -18,20 +19,28 @@ export default function Register() {
     const email = refEmail.current.value;
     const confirmPassword = refConfirmPassword.current.value;
 
-    const fetchedData = await fetch(
-      "https://localhost:7015/api/v1/Auth/Register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    try {
+      const fetchedData = await axios.post(
+        "https://localhost:7015/api/v1/Auth/Register",
+        {
+          username,
+          email,
+          password,
+          confirmPassword,
         },
-        body: JSON.stringify({ username, email, password, confirmPassword }),
-      }
-    );
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    const data = await fetchedData.json();
-    console.log(data);
-    navigateTo("/login");
+      console.log(fetchedData);
+      navigateTo("/login");
+    } catch (error) {
+      console.log(error);
+      return alert(error.response.data.error);
+    }
   };
 
   const navigateTo = (path) => {
@@ -48,6 +57,24 @@ export default function Register() {
                 <h1 class="pt-8 pb-6 font-bold text-white text-5xl text-center cursor-default">
                   Register
                 </h1>
+                <div>
+                  <div class="text-white text-xs m-2">
+                    <p class="mb-2 font-semibold">Username Requirements:</p>
+                    <ul class="list-disc pl-5 mb-4">
+                      <li>Must be at least 5 characters long.</li>
+                      <li>Include at least one uppercase letter (A-Z).</li>
+                      <li>Include at least one lowercase letter (a-z).</li>
+                      <li>Include at least one number (0-9).</li>
+                    </ul>
+                    <p class="mb-2 font-semibold">Password Requirements:</p>
+                    <ul class="list-disc pl-5">
+                      <li>Must be at least 8 characters long.</li>
+                      <li>Include at least one uppercase letter (A-Z).</li>
+                      <li>Include at least one lowercase letter (a-z).</li>
+                      <li>Include at least one number (0-9).</li>
+                    </ul>
+                  </div>
+                </div>
                 <form onSubmit={handleSubmit} method="post" class="space-y-4">
                   <div>
                     <input

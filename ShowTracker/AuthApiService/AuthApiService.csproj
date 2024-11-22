@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AuthData\AuthData.csproj" />
+    <ProjectReference Include="..\ExceptionService\ExceptionService.csproj" />
     <ProjectReference Include="..\UserService\UserService.csproj" />
   </ItemGroup>
 

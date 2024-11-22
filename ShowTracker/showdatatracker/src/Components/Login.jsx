@@ -34,13 +34,11 @@ export default function Login() {
         }
       );
 
-      localStorage.setItem("Username", fetchedData.data.username);
-
       isAuthorized.setAuthState(true);
       navigateTo("/home");
-    } catch (ex) {
-      console.log(ex);
-      return alert("Wrong username or password");
+    } catch (error) {
+      console.log(error.response.data.error);
+      return alert(error.response.data.error);
     }
   };
 
