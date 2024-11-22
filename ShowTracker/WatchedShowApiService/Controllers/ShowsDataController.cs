@@ -24,12 +24,11 @@ public class ShowsDataController : ControllerBase
     public async Task<IActionResult> MarkShowWatchedAsync(int ShowId )
     {
 
-        try { 
-         var token = HttpContext.Request.Headers["Authorization"];
+        try {
 
-         token = token.ToString().Replace("Bearer ", "");
+         var username = HttpContext.Request.Cookies["username"];
 
-         await _showTrackerService.MarkShowWatchedAsync(ShowId, token);
+         await _showTrackerService.MarkShowWatchedAsync(ShowId, username);
 
          return Ok();
          
@@ -43,12 +42,10 @@ public class ShowsDataController : ControllerBase
     [HttpPost("MarkWatched/{showId}/{episodeId}")]
     public async Task<IActionResult> MarkEpisodeWatchedAsync(int showId, int episodeId)
     {
-        try { 
-            var token = HttpContext.Request.Headers["Authorization"];
+        try {
+            var username = HttpContext.Request.Cookies["username"];
 
-            token = token.ToString().Replace("Bearer ", "");
-
-            await _showTrackerService.MarkEpisodeWatchedAsync(showId, episodeId, token);
+            await _showTrackerService.MarkEpisodeWatchedAsync(showId, episodeId, username);
 
             return Ok();
         }
@@ -65,11 +62,9 @@ public class ShowsDataController : ControllerBase
     {
         try
         {
-            var token = HttpContext.Request.Headers["Authorization"];
+            var username = HttpContext.Request.Cookies["username"];
 
-            token = token.ToString().Replace("Bearer ", "");
-
-            await _showTrackerService.UnwatchEpisodeAsync(showId, episodeId, token);
+            await _showTrackerService.UnwatchEpisodeAsync(showId, episodeId, username);
 
             return Ok();
         }
@@ -88,11 +83,9 @@ public class ShowsDataController : ControllerBase
     {
         try
         {
-            var token = HttpContext.Request.Headers["Authorization"];
+            var username = HttpContext.Request.Cookies["username"];
 
-            token = token.ToString().Replace("Bearer ", "");
-
-            var res = await _showTrackerService.GetWatchedShowsIdAsync(token);
+            var res = await _showTrackerService.GetWatchedShowsIdAsync(username);
 
             return Ok(res);
 
@@ -104,25 +97,14 @@ public class ShowsDataController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("GetWatchedEpisodes")]
-    public async Task<IActionResult> GetWatchedEpisodes()
-    {
-        return Ok();
-    }
-
-    [Authorize]
     [HttpGet("GetInfo/{showId}")]
     public async Task<IActionResult> GetWatchedShowInfoAsync(int showId)
     {
         try
         {
+            var username = HttpContext.Request.Cookies["username"];
 
-
-        var token = HttpContext.Request.Headers["Authorization"];
-
-        token = token.ToString().Replace("Bearer ", "");
-
-        var res = await _showTrackerService.GetWatchedShowInfoAsync(showId, token);
+            var res = await _showTrackerService.GetWatchedShowInfoAsync(showId, username);
 
             return Ok(res);
 
@@ -140,13 +122,9 @@ public class ShowsDataController : ControllerBase
     {
         try
         {
+            var username = HttpContext.Request.Cookies["username"];
 
-
-            var token = HttpContext.Request.Headers["Authorization"];
-
-            token = token.ToString().Replace("Bearer ", "");
-
-            await _showTrackerService.UnwatchShowAsync(showId, token);
+            await _showTrackerService.UnwatchShowAsync(showId, username);
 
             return Ok();
 

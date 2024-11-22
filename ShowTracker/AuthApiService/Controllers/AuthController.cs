@@ -27,6 +27,7 @@ public class AuthController : ControllerBase
         _registerUserValidator = registerUserValidator;
     }
 
+    [AllowAnonymous]
     [HttpPost("Register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO user)
     {
@@ -46,6 +47,7 @@ public class AuthController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDTO user)
     {
@@ -59,22 +61,9 @@ public class AuthController : ControllerBase
 
             var res = await _authService.LoginUserAsync(user);
 
-            var cookieAccess = new CookieHeaderValue("accessToken", res.accessToken);
-            var cookieResfresh = new CookieHeaderValue("refreshToken", res.refreshToken);
-
-            // Define the cookie options
-            //var cookieOptions = new CookieOptions
-            //{
-            //    Path = "/",
-            //    HttpOnly = true,  // Cookie is only accessible via HTTP requests
-            //    Secure = true,    // Cookie is only sent over HTTPS
-            //    Expires = res.refreshTokenExpireTime, // Set cookie expiration
-            //    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
-            //};
-
-            // Set the cookie
             Response.Cookies.Append("accessToken", res.accessToken);
             Response.Cookies.Append("refreshToken", res.refreshToken);
+            Response.Cookies.Append("username", res.userName);
 
             return Ok( new { username = user.Username });
         }
@@ -106,16 +95,9 @@ public class AuthController : ControllerBase
 
         await _authService.LogOutAsync(new TokenDTO (accessToken, refreshToken));
 
-        //var cookieOptions = new CookieOptions
-        //{
-        //    Path = "/",
-        //    HttpOnly = true,  // Cookie is only accessible via HTTP requests
-        //    Secure = true,    // Cookie is only sent over HTTPS
-        //    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
-        //};
-
         Response.Cookies.Delete("accessToken");
         Response.Cookies.Delete("refreshToken");
+        Response.Cookies.Delete("username");
 
         return Ok("Logged out successfully");
     }

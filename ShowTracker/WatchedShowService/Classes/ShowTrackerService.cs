@@ -28,14 +28,10 @@ public class ShowTrackerService : IShowTrackerService
         _tokenService = tokenService;
     }
 
-    public async Task MarkEpisodeWatchedAsync(int showId, int episodeId, string token)
+    public async Task MarkEpisodeWatchedAsync(int showId, int episodeId, string username)
     {
         try
         {
-            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
-
-            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -66,13 +62,10 @@ public class ShowTrackerService : IShowTrackerService
 
     }
 
-    public async Task MarkShowWatchedAsync(int showId, string token)
+    public async Task MarkShowWatchedAsync(int showId, string username)
     {
         try
         {
-            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
-
-            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
@@ -92,14 +85,10 @@ public class ShowTrackerService : IShowTrackerService
         }
     }
 
-    public async Task<List<int>> GetWatchedShowsIdAsync(string token)
+    public async Task<List<int>> GetWatchedShowsIdAsync(string username)
     {
         try
         {
-            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
-
-            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -117,14 +106,10 @@ public class ShowTrackerService : IShowTrackerService
         }
     }
 
-    public async Task UnwatchEpisodeAsync(int showId, int episodeId, string token)
+    public async Task UnwatchEpisodeAsync(int showId, int episodeId, string username)
     {
         try
         {
-            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
-
-            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -149,16 +134,10 @@ public class ShowTrackerService : IShowTrackerService
 
     }
 
-    public async Task<WatchedShowDTO> GetWatchedShowInfoAsync(int showId, string token)
+    public async Task<WatchedShowDTO> GetWatchedShowInfoAsync(int showId, string username)
     {
         try
         {
-
-
-            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
-
-            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
@@ -181,16 +160,10 @@ public class ShowTrackerService : IShowTrackerService
         }
     }
 
-    public async Task UnwatchShowAsync(int showId, string token)
+    public async Task UnwatchShowAsync(int showId, string username)
     {
         try
         {
-
-
-            var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
-
-            var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
             var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)

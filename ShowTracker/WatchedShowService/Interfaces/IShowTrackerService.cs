@@ -10,11 +10,11 @@ namespace WatchedShowService.Interfaces;
 
 public interface IShowTrackerService
 {
-    public Task MarkShowWatchedAsync(int showId, string token);
-    public Task MarkEpisodeWatchedAsync(int showId, int episodeId, string token);
-    public Task<List<int>> GetWatchedShowsIdAsync(string token);
-    public Task UnwatchEpisodeAsync(int showId, int episodeId, string token);
-    public Task<WatchedShowDTO> GetWatchedShowInfoAsync(int showId, string token);
-    public Task UnwatchShowAsync(int showId, string token);
+    public Task MarkShowWatchedAsync(int showId, string username);
+    public Task MarkEpisodeWatchedAsync(int showId, int episodeId, string username);
+    public Task<List<int>> GetWatchedShowsIdAsync(string username);
+    public Task UnwatchEpisodeAsync(int showId, int episodeId, string username);
+    public Task<WatchedShowDTO> GetWatchedShowInfoAsync(int showId, string username);
+    public Task UnwatchShowAsync(int showId, string username);
 
 }
