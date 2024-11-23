@@ -3,6 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import { authContext } from "./MainWindow";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getShowIdforPlayer } from "../Actions/Actions";
 
 export default function ShowDetails() {
   const show = useLoaderData();
@@ -13,28 +14,75 @@ export default function ShowDetails() {
     navigate(path);
   };
 
+  // useEffect(() => {
+  //   if (!show?.showInfo?.externals?.imdb) {
+  //     console.warn("IMDB ID отсутствует. Скрипт не будет выполнен.");
+  //     return;
+  //   }
+  //   console.log(show.showInfo.externals.imdb);
+  //   // Убедитесь, что kbox доступен
+  //   const loadScript = () => {
+  //     const script = document.createElement("script");
+  //     script.src = "https://kinobox.tv/kinobox.min.js";
+  //     script.async = true;
+  //     script.onload = () => {
+  //       if (window.kbox) {
+  //         window.kbox(".kinobox_player", {
+  //           search: { imdb: show.showInfo.externals.imdb },
+  //         });
+  //       }
+  //     };
+  //     document.body.appendChild(script);
+  //   };
+
+  //   if (!window.kbox) {
+  //     loadScript();
+  //   } else {
+  //     window.kbox(".kinobox_player", { imdb: show.showInfo.externals.imdb });
+  //   }
+  // }, [[show?.showInfo?.externals?.imdb]]); // Обновлять при изменении названия фильма
+
   useEffect(() => {
-    // Убедитесь, что kbox доступен
+    // Проверяем наличие IMDb ID
+    if (!show?.showInfo?.externals?.imdb) {
+      console.warn("IMDb ID отсутствует.");
+      return;
+    }
+
+    const imdbId = show.showInfo.externals.imdb;
+
+    const initializeKbox = () => {
+      if (window.kbox) {
+        try {
+          // Перед вызовом добавляем задержку
+          setTimeout(() => {
+            window.kbox(".kinobox_player", {
+              search: { imdb: imdbId },
+            });
+          }, 10); // Задержка для инициализации
+        } catch (error) {
+          console.error("Ошибка вызова kbox:", error);
+        }
+      }
+    };
+
     const loadScript = () => {
       const script = document.createElement("script");
       script.src = "https://kinobox.tv/kinobox.min.js";
       script.async = true;
-      script.onload = () => {
-        if (window.kbox) {
-          window.kbox(".kinobox_player", {
-            search: { title: show.showInfo.name },
-          });
-        }
-      };
+
+      script.onload = initializeKbox;
+
       document.body.appendChild(script);
     };
 
-    if (!window.kbox) {
-      loadScript();
+    // Если kbox уже загружен, инициализируем сразу
+    if (window.kbox) {
+      initializeKbox();
     } else {
-      window.kbox(".kinobox_player", { search: { title: show.showInfo.name } });
+      loadScript();
     }
-  }, [show]); // Обновлять при изменении названия фильма
+  }, [show?.showInfo?.externals?.imdb]); // Зависимость на IMDb ID
 
   const handleClickWatch = async () => {
     try {

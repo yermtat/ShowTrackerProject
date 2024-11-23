@@ -47,10 +47,16 @@ export const showDetailsLoader = async ({ params }) => {
 
       console.log(userWatchedData.data);
     } catch {
-      return { showInfo: showInfo, userWatchedData: null };
+      return {
+        showInfo: showInfo,
+        userWatchedData: null,
+      };
     }
 
-    return { showInfo: showInfo, userWatchedData: userWatchedData.data };
+    return {
+      showInfo: showInfo,
+      userWatchedData: userWatchedData.data,
+    };
   } catch (error) {
     console.log(error);
   }
