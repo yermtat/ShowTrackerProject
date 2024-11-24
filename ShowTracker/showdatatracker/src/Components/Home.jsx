@@ -1,12 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext  } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link, useLoaderData } from "react-router-dom";
 import Modal from "react-modal";
+import { getShowsByName } from "../Actions/ShowsActions";
+import { authContext } from "./MainWindow";
 
 export default function Home() {
   const trendingShows = useLoaderData();
+  const isAuthorized = useContext(authContext);
 
   const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -24,18 +27,17 @@ export default function Home() {
   };
 
   const handleClick = async () => {
-    console.log(searchRef.current.value);
     const search = searchRef.current.value;
 
-    const url = `https://api.tvmaze.com/search/shows?q=${search}`;
-    const options = {
-      method: "GET",
-    };
-    var res = await fetch(url, options).then((response) => response.json());
+    try{
+      const res = await getShowsByName(search);
 
     setShows(res);
 
     setIsOpen(true);
+    }catch(error){
+      return alert(error.message);
+    }
   };
 
   return (
@@ -73,7 +75,7 @@ export default function Home() {
                     {Array.isArray(shows) && shows.length > 0 ? (
                       shows.map((show) => (
                         <div key={show.show.id}>
-                          <Link to={`/showDetails/${show.show.id}`}>
+                          <Link to={`/showDetails/${show.show.id}?auth=${isAuthorized.authState}`}>
                             <div className="w-48 bg-gray-800 rounded-lg overflow-hidden shadow-lg text-white m-10">
                               {show.show.image ? (
                                 <img

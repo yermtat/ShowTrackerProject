@@ -3,12 +3,14 @@ import MainWindow from "./Components/MainWindow";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Myshows from "./Components/Myshows";
+
 import {
   myShowsLoader,
   settingsLoader,
   showDetailsLoader,
   trendingLoader,
 } from "./Actions/Loaders";
+
 import ShowDetails from "./Components/ShowDetails";
 import Settings from "./Components/Settings";
 

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {getShowInfoById, getUserShowWatchedData } from "../Actions/ShowsActions";
 
 export async function trendingLoader() {
   try {
@@ -18,49 +19,79 @@ export async function trendingLoader() {
   }
 }
 
-export const showDetailsLoader = async ({ params }) => {
+// export const showDetailsLoader = async ({ params }) => {
+//   try {
+//     console.log(params.id);
+//     const url = `https://api.tvmaze.com/shows/${params.id}?embed=episodes`;
+//     const options = {
+//       method: "GET",
+//     };
+
+//     const showInfo = await fetch(url, options).then((response) =>
+//       response.json()
+//     );
+//     console.log(showInfo);
+
+//     let userWatchedData;
+
+//     try {
+//       userWatchedData = await axios.get(
+//         `https://localhost:7028/api/v1/ShowsData/GetInfo/${params.id}`,
+//         {
+//           withCredentials: true, // передается в конфигурацию запроса
+//         },
+//         {
+//           Accept: "*/*",
+//           Host: "http://localhost:3000",
+//         }
+//       );
+
+//       console.log(userWatchedData.data);
+//     } catch {
+//       return {
+//         showInfo: showInfo,
+//         userWatchedData: null,
+//       };
+//     }
+
+//     return {
+//       showInfo: showInfo,
+//       userWatchedData: userWatchedData.data,
+//     };
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+
+export const showDetailsLoader = async ({ params, request}) => {
+  const url = new URL(request.url);
+  const isAuth = url.searchParams.get("auth");
+  console.log(isAuth);
+
   try {
-    console.log(params.id);
-    const url = `https://api.tvmaze.com/shows/${params.id}?embed=episodes`;
-    const options = {
-      method: "GET",
-    };
-
-    const showInfo = await fetch(url, options).then((response) =>
-      response.json()
-    );
-    console.log(showInfo);
-
+    const showInfo = await getShowInfoById(params.id);
     let userWatchedData;
-
-    try {
-      userWatchedData = await axios.get(
-        `https://localhost:7028/api/v1/ShowsData/GetInfo/${params.id}`,
-        {
-          withCredentials: true, // передается в конфигурацию запроса
-        },
-        {
-          Accept: "*/*",
-          Host: "http://localhost:3000",
-        }
-      );
-
-      console.log(userWatchedData.data);
-    } catch {
-      return {
-        showInfo: showInfo,
-        userWatchedData: null,
-      };
+    if (isAuth == "true") {
+      userWatchedData = await getUserShowWatchedData(params.id);
+      console.log("auth true");
+    }
+    else {
+      console.log("auth false");
+      userWatchedData = null;
     }
 
     return {
       showInfo: showInfo,
-      userWatchedData: userWatchedData.data,
+      userWatchedData: userWatchedData,
     };
-  } catch (error) {
+
+  }catch(error) {
     console.log(error);
   }
-};
+}
+
+
 
 export const myShowsLoader = async () => {
   try {

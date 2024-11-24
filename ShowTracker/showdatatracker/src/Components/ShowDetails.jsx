@@ -1,9 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData} from "react-router-dom";
 import { authContext } from "./MainWindow";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { getShowIdforPlayer } from "../Actions/Actions";
+import { deleteFromWatchlist, addToWatchlist, watchEpisode, unwatchEpisode} from "../Actions/ShowsActions";
 
 export default function ShowDetails() {
   const show = useLoaderData();
@@ -13,34 +12,6 @@ export default function ShowDetails() {
   const navigateTo = (path) => {
     navigate(path);
   };
-
-  // useEffect(() => {
-  //   if (!show?.showInfo?.externals?.imdb) {
-  //     console.warn("IMDB ID отсутствует. Скрипт не будет выполнен.");
-  //     return;
-  //   }
-  //   console.log(show.showInfo.externals.imdb);
-  //   // Убедитесь, что kbox доступен
-  //   const loadScript = () => {
-  //     const script = document.createElement("script");
-  //     script.src = "https://kinobox.tv/kinobox.min.js";
-  //     script.async = true;
-  //     script.onload = () => {
-  //       if (window.kbox) {
-  //         window.kbox(".kinobox_player", {
-  //           search: { imdb: show.showInfo.externals.imdb },
-  //         });
-  //       }
-  //     };
-  //     document.body.appendChild(script);
-  //   };
-
-  //   if (!window.kbox) {
-  //     loadScript();
-  //   } else {
-  //     window.kbox(".kinobox_player", { imdb: show.showInfo.externals.imdb });
-  //   }
-  // }, [[show?.showInfo?.externals?.imdb]]); // Обновлять при изменении названия фильма
 
   useEffect(() => {
     // Проверяем наличие IMDb ID
@@ -86,17 +57,7 @@ export default function ShowDetails() {
 
   const handleClickWatch = async () => {
     try {
-      const fetchedData = await axios.post(
-        `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.showInfo.id}`,
-        {}, // тело запроса, если оно не нужно, оставьте пустым объектом
-        {
-          withCredentials: true, // передается в конфигурацию запроса
-        },
-        {
-          Accept: "*/*",
-          Host: "http://localhost:3000",
-        }
-      );
+      await addToWatchlist(show.showInfo.id);
 
       navigateTo(`/showDetails/${show.showInfo.id}`);
     } catch (error) {
@@ -106,17 +67,8 @@ export default function ShowDetails() {
 
   const handleClickUnwatch = async () => {
     try {
-      const fetchedData = await axios.post(
-        `https://localhost:7028/api/v1/ShowsData/Unwatch/${show.showInfo.id}`,
-        {}, // тело запроса, если оно не нужно, оставьте пустым объектом
-        {
-          withCredentials: true, // передается в конфигурацию запроса
-        },
-        {
-          Accept: "*/*",
-          Host: "http://localhost:3000",
-        }
-      );
+      
+      await deleteFromWatchlist(show.showInfo.id);
 
       navigateTo(`/showDetails/${show.showInfo.id}`);
     } catch (error) {
@@ -128,29 +80,9 @@ export default function ShowDetails() {
     try {
       let fetchedData;
       if (isWatched) {
-        fetchedData = await axios.post(
-          `https://localhost:7028/api/v1/ShowsData/MarkWatched/${show.showInfo.id}/${episodeId}`,
-          {},
-          {
-            withCredentials: true,
-          },
-          {
-            Accept: "*/*",
-            Host: "http://localhost:3000",
-          }
-        );
+       await watchEpisode(show.showInfo.Id, episodeId);
       } else {
-        fetchedData = await axios.post(
-          `https://localhost:7028/api/v1/ShowsData/Unwatch/${show.showInfo.id}/${episodeId}`,
-          {},
-          {
-            withCredentials: true,
-          },
-          {
-            Accept: "*/*",
-            Host: "http://localhost:3000",
-          }
-        );
+        await unwatchEpisode(show.showInfo.Id, episodeId)
       }
     } catch (error) {
       return alert(error.response.data.error);
