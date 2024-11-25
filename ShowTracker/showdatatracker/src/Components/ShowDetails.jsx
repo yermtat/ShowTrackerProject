@@ -1,8 +1,13 @@
 import React, { useContext, useEffect } from "react";
-import { useLoaderData} from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { authContext } from "./MainWindow";
 import { useNavigate } from "react-router-dom";
-import { deleteFromWatchlist, addToWatchlist, watchEpisode, unwatchEpisode} from "../Actions/ShowsActions";
+import {
+  deleteFromWatchlist,
+  addToWatchlist,
+  watchEpisode,
+  unwatchEpisode,
+} from "../Actions/ShowsActions";
 
 export default function ShowDetails() {
   const show = useLoaderData();
@@ -59,7 +64,9 @@ export default function ShowDetails() {
     try {
       await addToWatchlist(show.showInfo.id);
 
-      navigateTo(`/showDetails/${show.showInfo.id}`);
+      navigateTo(
+        `/showDetails/${show.showInfo.id}?auth=${isAuthorized.authState}`
+      );
     } catch (error) {
       return alert(error.response.data.error);
     }
@@ -67,10 +74,11 @@ export default function ShowDetails() {
 
   const handleClickUnwatch = async () => {
     try {
-      
       await deleteFromWatchlist(show.showInfo.id);
 
-      navigateTo(`/showDetails/${show.showInfo.id}`);
+      navigateTo(
+        `/showDetails/${show.showInfo.id}?auth=${isAuthorized.authState}`
+      );
     } catch (error) {
       return alert(error.response.data.error);
     }
@@ -80,9 +88,9 @@ export default function ShowDetails() {
     try {
       let fetchedData;
       if (isWatched) {
-       await watchEpisode(show.showInfo.Id, episodeId);
+        await watchEpisode(show.showInfo.id, episodeId);
       } else {
-        await unwatchEpisode(show.showInfo.Id, episodeId)
+        await unwatchEpisode(show.showInfo.id, episodeId);
       }
     } catch (error) {
       return alert(error.response.data.error);

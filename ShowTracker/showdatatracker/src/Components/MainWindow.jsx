@@ -8,12 +8,6 @@ export const authContext = createContext();
 export default function MainWindow() {
   const [authState, setAuthState] = useState(false);
 
-  useEffect(() => {
-    if (localStorage.getItem("accessToken")) {
-      setAuthState(true);
-    }
-  }, [authState]);
-
   return (
     <div>
       <authContext.Provider value={{ authState, setAuthState }}>
@@ -37,4 +31,3 @@ export default function MainWindow() {
     </div>
   );
 }
-

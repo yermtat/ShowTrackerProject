@@ -1,5 +1,8 @@
 import axios from "axios";
-import {getShowInfoById, getUserShowWatchedData } from "../Actions/ShowsActions";
+import {
+  getShowInfoById,
+  getUserShowWatchedData,
+} from "../Actions/ShowsActions";
 
 export async function trendingLoader() {
   try {
@@ -63,9 +66,9 @@ export async function trendingLoader() {
 //   }
 // };
 
-
-export const showDetailsLoader = async ({ params, request}) => {
+export const showDetailsLoader = async ({ params, request }) => {
   const url = new URL(request.url);
+  console.log(url);
   const isAuth = url.searchParams.get("auth");
   console.log(isAuth);
 
@@ -75,8 +78,7 @@ export const showDetailsLoader = async ({ params, request}) => {
     if (isAuth == "true") {
       userWatchedData = await getUserShowWatchedData(params.id);
       console.log("auth true");
-    }
-    else {
+    } else {
       console.log("auth false");
       userWatchedData = null;
     }
@@ -85,13 +87,10 @@ export const showDetailsLoader = async ({ params, request}) => {
       showInfo: showInfo,
       userWatchedData: userWatchedData,
     };
-
-  }catch(error) {
+  } catch (error) {
     console.log(error);
   }
-}
-
-
+};
 
 export const myShowsLoader = async () => {
   try {

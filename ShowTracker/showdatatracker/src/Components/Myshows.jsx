@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useLoaderData } from "react-router-dom";
+import { authContext } from "./MainWindow";
 
 export default function Myshows() {
   const shows = useLoaderData();
+
+  const isAuthorized = useContext(authContext);
 
   return (
     <div>
@@ -10,7 +13,9 @@ export default function Myshows() {
         {Array.isArray(shows) && shows.length > 0 ? (
           shows.map((show) => (
             <div>
-              <Link to={`/showDetails/${show.id}`}>
+              <Link
+                to={`/showDetails/${show.id}?auth=${isAuthorized.authState}`}
+              >
                 <div className="w-48 bg-gray-800 rounded-lg overflow-hidden shadow-lg text-white m-10">
                   {show.image ? (
                     <img

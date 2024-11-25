@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext  } from "react";
+import React, { useRef, useState, useContext } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -29,13 +29,14 @@ export default function Home() {
   const handleClick = async () => {
     const search = searchRef.current.value;
 
-    try{
+    console.log(isAuthorized.authState);
+    try {
       const res = await getShowsByName(search);
 
-    setShows(res);
+      setShows(res);
 
-    setIsOpen(true);
-    }catch(error){
+      setIsOpen(true);
+    } catch (error) {
       return alert(error.message);
     }
   };
@@ -75,7 +76,9 @@ export default function Home() {
                     {Array.isArray(shows) && shows.length > 0 ? (
                       shows.map((show) => (
                         <div key={show.show.id}>
-                          <Link to={`/showDetails/${show.show.id}?auth=${isAuthorized.authState}`}>
+                          <Link
+                            to={`/showDetails/${show.show.id}?auth=${isAuthorized.authState}`}
+                          >
                             <div className="w-48 bg-gray-800 rounded-lg overflow-hidden shadow-lg text-white m-10">
                               {show.show.image ? (
                                 <img
