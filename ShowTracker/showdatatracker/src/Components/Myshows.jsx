@@ -9,14 +9,14 @@ export default function Myshows() {
 
   return (
     <div>
-      <div className="w-full flex flex-wrap">
+      <div className="flex flex-wrap gap-10 p-10">
         {Array.isArray(shows) && shows.length > 0 ? (
           shows.map((show) => (
             <div>
               <Link
                 to={`/showDetails/${show.id}?auth=${isAuthorized.authState}`}
               >
-                <div className="w-48 bg-gray-800 rounded-lg overflow-hidden shadow-lg text-white m-10">
+                <div className="bg-yellow-100 dark:bg-yellow-700 rounded-lg shadow-lg overflow-hidden text-black dark:text-white">
                   {show.image ? (
                     <img
                       className="w-full h-56 object-cover"

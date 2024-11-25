@@ -1,6 +1,6 @@
 import React from "react";
 import { useRef, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { authContext } from "./MainWindow";
 import axios from "axios";
 
@@ -47,46 +47,46 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <div className="w-full relative mb-20">
-        <div class="h-screen flex justify-center items-center dark:bg-gray-900">
-          <div class="grid gap-8">
-            <div id="back-div" class="  rounded-[70px] m-4">
-              <div class="border-[70px] border-transparent rounded-[70px] bg-gray-400 shadow-lg xl:p-10 2xl:p-10 lg:p-10 md:p-10 sm:p-2 m-2 bg-opacity-50">
-                <h1 class="pt-8 pb-6 font-bold text-white text-5xl text-center cursor-default">
-                  Log in
-                </h1>
-                <form onSubmit={handleSubmit} method="post" class="space-y-4">
-                  <div>
-                    <input
-                      id="username"
-                      class="border p-3 dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 shadow-md placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
-                      type="username"
-                      placeholder="Username"
-                      required
-                      ref={refUsername}
-                    />
-                  </div>
-                  <div>
-                    <input
-                      id="password"
-                      class="border p-3 shadow-md dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
-                      type="password"
-                      placeholder="Password"
-                      required
-                      ref={refPassword}
-                    />
-                  </div>
-                  <button
-                    class="dark:text-gray-300 bg-black shadow-lg mt-6 p-2 text-white rounded-lg w-full hover:scale-105 hover:text-orange-600 transition duration-300 ease-in-out"
-                    type="submit"
-                  >
-                    LOG IN
-                  </button>
-                </form>
-              </div>
-            </div>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-md p-8 bg-yellow-100 dark:bg-yellow-700 rounded-3xl shadow-lg">
+        <h1 className="text-4xl font-bold text-center text-yellow-500 dark:text-yellow-300 mb-8">
+          Log in
+        </h1>
+        <form onSubmit={handleSubmit} method="post" className="space-y-6">
+          <div>
+            <input
+              id="username"
+              className="w-full px-4 py-3 text-black placeholder-gray-700 bg-white dark:bg-yellow-600 dark:text-gray-200 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              type="username"
+              placeholder="Username"
+              required
+              ref={refUsername}
+            />
           </div>
+          <div>
+            <input
+              id="password"
+              className="w-full px-4 py-3 text-black placeholder-gray-700 bg-white dark:bg-yellow-600 dark:text-gray-200 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              type="password"
+              placeholder="Password"
+              required
+              ref={refPassword}
+            />
+          </div>
+          <button
+            className="w-full py-3 text-lg font-bold text-black bg-yellow-500 rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-700 transition-transform transform hover:scale-105"
+            type="submit"
+          >
+            LOG IN
+          </button>
+        </form>
+        <div className="text-center mt-4 text-gray-700 dark:text-gray-300">
+          <p>
+            Don't have an account?{" "}
+            <Link to="/register" className="text-yellow-500 hover:underline">
+              Sign up
+            </Link>
+          </p>
         </div>
       </div>
     </div>
