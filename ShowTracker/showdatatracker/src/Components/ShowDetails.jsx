@@ -150,138 +150,167 @@ export default function ShowDetails() {
   };
 
   return (
-    <div className="">
-      <div class="flex justify-center items-center h-full w-full">
-        <ul class="list-none flex">
-          <li class=" m-10">
-            {show.showInfo.image ? (
-              <img
-                className="w-full h-56 object-cover"
-                src={show.showInfo.image.original}
-                alt={show.showInfo.name}
-              />
-            ) : (
-              <img
-                className="w-full h-56 object-cover"
-                src="./bg.png"
-                alt={show.showInfo.name}
-              />
-            )}
-          </li>
-          <li id="filmInfo" class="m-10">
-            <div class="block max-w-[18rem] rounded-lg border border-success-600 bg-transparent text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
-              <div class="p-6">
-                <h5 class="mb-2 text-xl font-medium leading-tight text-success-600">
-                  {show.showInfo.name} - {show.showInfo.id}
-                </h5>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: `${show.showInfo.summary}`,
-                  }}
-                />
-              </div>
+    <div className="flex flex-col items-center p-6 bg-surface dark:bg-surface-dark text-on-surface dark:text-on-surface-dark">
+      {/* Информация о сериале */}
+      <div className="flex flex-col sm:flex-row items-center sm:items-start w-full max-w-6xl gap-8 ">
+        {/* Изображение сериала */}
+        <div className="w-full sm:w-1/3">
+          {show.showInfo.image ? (
+            <img
+              className="w-full h-auto rounded-lg object-cover shadow-md"
+              src={show.showInfo.image.original}
+              alt={show.showInfo.name}
+            />
+          ) : (
+            <img
+              className="w-full h-auto rounded-lg object-cover shadow-md"
+              alt={show.showInfo.name}
+            />
+          )}
+        </div>
+
+        {/* Основная информация */}
+        <div className="w-full sm:w-2/3">
+          <div className="rounded-lg p-6 bg-slate-400 bg-opacity-35 dark:bg-primary-container-dark shadow-lg">
+            <h2 className="text-3xl font-bold mb-4 text-primary dark:text-primary-dark">
+              {show.showInfo.name}
+            </h2>
+            <p className="mb-2">
+              <strong>Language:</strong> {show.showInfo.language}
+            </p>
+            <p className="mb-2">
+              <strong>Genres:</strong> {show.showInfo.genres.join(", ")}
+            </p>
+            <p className="mb-2">
+              <strong>Status:</strong> {show.showInfo.status}
+            </p>
+            <p className="mb-2">
+              <strong>Runtime:</strong> {show.showInfo.averageRuntime} minutes
+            </p>
+            <div
+              className="text-secondary dark:text-secondary-dark"
+              dangerouslySetInnerHTML={{
+                __html: show.showInfo.summary,
+              }}
+            />
+          </div>
+
+          {isAuthorized.authState && (
+            <div className="flex flex-wrap gap-4 mt-6">
+              {/* Кнопка Watch */}
+              <button
+                onClick={
+                  show.userWatchedData.isWatched
+                    ? handleClickUnwatch
+                    : handleClickWatch
+                }
+                className="`w-full sm:w-auto px-6 py-3 text-center font-bold text-black bg-yellow-500 rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-700 transition-transform transform hover:scale-105"
+              >
+                {show.userWatchedData.isWatched
+                  ? "Unwatch"
+                  : "Add to watchlist"}
+              </button>
+
+              {/* Кнопка Watch Later */}
+              <button
+                onClick={
+                  show.userWatchedData.isWatchLater
+                    ? handleDeleteWatchLater
+                    : handleClicWatchLater
+                }
+                disabled={show.userWatchedData.isWatched}
+                className={`w-full sm:w-auto px-6 py-3 text-center rounded-md ${
+                  show.userWatchedData.isWatched
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "font-bold text-black bg-yellow-500 rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-700 transition-transform transform hover:scale-105"
+                }`}
+              >
+                {show.userWatchedData.isWatchLater
+                  ? "Won't watch"
+                  : "Watch later"}
+              </button>
+
+              {/* Иконка Favourite */}
+              <button
+                onClick={
+                  show.userWatchedData.isFavourite
+                    ? handleDeleteFavourite
+                    : handleClicAddFavourite
+                }
+                disabled={!show.userWatchedData.isWatched}
+                className={`w-12 h-12 flex items-center justify-center rounded-full transition ${
+                  !show.userWatchedData.isWatched
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : show.userWatchedData.isFavourite
+                    ? "bg-red-600 text-white hover:bg-red-500"
+                    : "bg-gray-500 text-gray-200 hover:bg-gray-400"
+                }`}
+              >
+                ♥
+              </button>
             </div>
-
-            {isAuthorized.authState && (
-              <div>
-                <button
-                  onClick={
-                    show.userWatchedData.isWatched
-                      ? handleClickUnwatch
-                      : handleClickWatch
-                  }
-                  className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
-                >
-                  {show.userWatchedData.isWatched ? (
-                    <span>Unwatch</span>
-                  ) : (
-                    <span>Add to watchlist</span>
-                  )}
-                </button>
-                <button
-                  onClick={
-                    show.userWatchedData.isWatchLater
-                      ? handleDeleteWatchLater
-                      : handleClicWatchLater
-                  }
-                  className={`m-10 h-11 border rounded-md ${
-                    show.userWatchedData.isWatched
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed mt-6 p-2 rounded-lg"
-                      : " text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
-                  }`}
-                  disabled={show.userWatchedData.isWatched}
-                >
-                  {show.userWatchedData.isWatchLater ? (
-                    <span>Won't watch</span>
-                  ) : (
-                    <span>Watch later</span>
-                  )}
-                </button>
-                <button
-                  onClick={
-                    show.userWatchedData.isFavourite
-                      ? handleDeleteFavourite
-                      : handleClicAddFavourite
-                  }
-                  className={`m-10 h-11 border rounded-md ${
-                    !show.userWatchedData.isWatched
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed mt-6 p-2 rounded-lg"
-                      : " text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
-                  }`}
-                  disabled={!show.userWatchedData.isWatched}
-                >
-                  {show.userWatchedData.isFavourite ? (
-                    <span>Don't like</span>
-                  ) : (
-                    <span>Like</span>
-                  )}
-                </button>
-              </div>
-            )}
-          </li>
-        </ul>
-      </div>
-
-      <div>
-        <div className="border rounded-xl border-gray-600">
-          <ul className="list-none">
-            {show.showInfo._embedded.episodes.map((episode) => (
-              <li>
-                <div className="m-5">
-                  <span className="m-5">
-                    {" "}
-                    {episode.season} x {episode.number}
-                  </span>
-                  <span className="m-5"> {episode.name}</span>
-                  <span className="m-5"> {episode.airdate}</span>
-
-                  {isAuthorized.authState && (
-                    <input
-                      type="checkbox"
-                      defaultChecked={
-                        show.userWatchedData.isWatched &&
-                        show.userWatchedData.watchedEpisodes.includes(
-                          episode.id
-                        )
-                      }
-                      disabled={!show.userWatchedData.isWatched}
-                      onChange={(e) =>
-                        handleEpisode(episode.id, e.target.checked)
-                      }
-                    />
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+          )}
         </div>
       </div>
 
-      <div className="flex flex-col items-center p-4 bg-gray-100 rounded-md shadow-md">
-        <h1 className="text-xl font-bold mb-4 text-gray-800">
-          Результаты поиска: {show.showInfo.name}
-        </h1>
-        <div className="kinobox_player w-full max-w-lg bg-white rounded-md shadow-md"></div>
+      {/* Видеоплеер */}
+      <div className="w-full max-w-6xl my-8 bg-secondary-container dark:bg-secondary-container-dark p-6 rounded-lg">
+        <div className="kinobox_player w-full h-full"></div>
+      </div>
+
+      {/* Список эпизодов */}
+      <div className="w-full max-w-6xl">
+        {Object.entries(
+          show.showInfo._embedded.episodes.reduce((acc, episode) => {
+            if (!acc[episode.season]) acc[episode.season] = [];
+            acc[episode.season].push(episode);
+            return acc;
+          }, {})
+        ).map(([season, episodes]) => (
+          <div key={season} className="mb-8 ">
+            <h4 className="text-2xl font-bold mb-4 text-primary dark:text-primary-dark">
+              Season {season}
+            </h4>
+            <ul className="border bg-slate-400 bg-opacity-35 border-outline dark:border-outline-dark rounded-lg bg-surface-variant dark:bg-surface-variant-dark p-4">
+              {episodes.map((episode) => (
+                <li
+                  key={episode.id}
+                  className="flex justify-between items-center py-2 border-b border-outline dark:border-outline-dark last:border-b-0"
+                >
+                  <div>
+                    <span className="font-bold text-on-surface dark:text-on-surface-dark">
+                      {episode.season}x{episode.number}
+                    </span>{" "}
+                    - {episode.name}
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-secondary dark:text-secondary-dark">
+                      {episode.airdate}
+                    </span>
+                    {isAuthorized.authState && (
+                      <input
+                        type="checkbox"
+                        defaultChecked={
+                          show.userWatchedData.isWatched &&
+                          show.userWatchedData.watchedEpisodes.includes(
+                            episode.id
+                          )
+                        }
+                        disabled={!show.userWatchedData.isWatched}
+                        onChange={(e) =>
+                          handleEpisode(episode.id, e.target.checked)
+                        }
+                        className={`w-5 h-5 ${
+                          show.userWatchedData.isWatched && "cursor-pointer"
+                        }  accent-primary dark:accent-primary-dark`}
+                      />
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   );

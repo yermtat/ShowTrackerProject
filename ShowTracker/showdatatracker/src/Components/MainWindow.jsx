@@ -29,9 +29,9 @@ export default function MainWindow() {
           className="pt-16 min-h-screen"
           style={{
             backgroundImage: `url(${background})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+            backgroundPosition: "right",
+            backgroundRepeat: "repeat",
           }}
         >
           <div className="w-full px-4 md:px-16 lg:px-60">

@@ -9,6 +9,9 @@ export default function Myshows() {
 
   return (
     <div>
+      <h1 className="pt-10 pl-10 text-3xl md:text-4xl font-bold text-yellow-500 mb-4">
+        Currently watching
+      </h1>
       <div className="flex flex-wrap gap-10 p-10">
         {Array.isArray(shows) && shows.length > 0 ? (
           shows.map((show) => (
@@ -24,11 +27,7 @@ export default function Myshows() {
                       alt={show.name}
                     />
                   ) : (
-                    <img
-                      className="w-full h-56 object-cover"
-                      src="/bg.png"
-                      alt={show.name}
-                    />
+                    <img className="w-full h-56 object-cover" alt={show.name} />
                   )}
 
                   <div className="p-4">
