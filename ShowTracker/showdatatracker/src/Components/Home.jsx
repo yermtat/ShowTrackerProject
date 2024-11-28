@@ -2,7 +2,7 @@ import React, { useRef, useState, useContext } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Link, useLoaderData } from "react-router-dom";
+import { useNavigate, Link, useLoaderData } from "react-router-dom";
 import Modal from "react-modal";
 import { getShowsByName } from "../Actions/ShowsActions";
 import { authContext } from "./MainWindow";
@@ -10,11 +10,16 @@ import { authContext } from "./MainWindow";
 export default function Home() {
   const trendingShows = useLoaderData();
   const isAuthorized = useContext(authContext);
+  const navigate = useNavigate();
 
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const searchRef = useRef();
   const [shows, setShows] = useState();
+
+  const navigateTo = (path) => {
+    navigate(path);
+  };
 
   var settings = {
     dots: true,
@@ -52,6 +57,19 @@ export default function Home() {
       setShows(res);
 
       setIsOpen(true);
+    } catch (error) {
+      return alert(error.message);
+    }
+  };
+
+  const handleClickTrendShow = async (e, name) => {
+    try {
+      const res = await getShowsByName(name);
+
+      console.log(res[0].show.id);
+      navigateTo(
+        `/showDetails/${res[0].show.id}?auth=${isAuthorized.authState}`
+      );
     } catch (error) {
       return alert(error.message);
     }
@@ -100,7 +118,12 @@ export default function Home() {
           {trendingShows &&
             trendingShows.results.map((show) => (
               <div key={show.id} className="p-4">
-                <div className="rounded-lg overflow-hidden shadow-lg bg-yellow-100 dark:bg-yellow-700">
+                <div
+                  className="rounded-lg overflow-hidden shadow-lg bg-yellow-100 dark:bg-yellow-700 cursor-pointer"
+                  onClick={(e) => {
+                    handleClickTrendShow(e, show.name);
+                  }}
+                >
                   <div className="aspect-w-2 aspect-h-3">
                     <img
                       className="w-full h-full object-cover"

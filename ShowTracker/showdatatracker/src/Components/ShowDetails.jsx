@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { authContext } from "./MainWindow";
 import { useNavigate } from "react-router-dom";
@@ -186,13 +186,13 @@ export default function ShowDetails() {
               <div>
                 <button
                   onClick={
-                    show.userWatchedData.showId
+                    show.userWatchedData.isWatched
                       ? handleClickUnwatch
                       : handleClickWatch
                   }
                   className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
                 >
-                  {show.userWatchedData.showId ? (
+                  {show.userWatchedData.isWatched ? (
                     <span>Unwatch</span>
                   ) : (
                     <span>Add to watchlist</span>
@@ -204,7 +204,12 @@ export default function ShowDetails() {
                       ? handleDeleteWatchLater
                       : handleClicWatchLater
                   }
-                  className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
+                  className={`m-10 h-11 border rounded-md ${
+                    show.userWatchedData.isWatched
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed mt-6 p-2 rounded-lg"
+                      : " text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
+                  }`}
+                  disabled={show.userWatchedData.isWatched}
                 >
                   {show.userWatchedData.isWatchLater ? (
                     <span>Won't watch</span>
@@ -218,7 +223,12 @@ export default function ShowDetails() {
                       ? handleDeleteFavourite
                       : handleClicAddFavourite
                   }
-                  className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
+                  className={`m-10 h-11 border rounded-md ${
+                    !show.userWatchedData.isWatched
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed mt-6 p-2 rounded-lg"
+                      : " text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
+                  }`}
+                  disabled={!show.userWatchedData.isWatched}
                 >
                   {show.userWatchedData.isFavourite ? (
                     <span>Don't like</span>
@@ -249,12 +259,12 @@ export default function ShowDetails() {
                     <input
                       type="checkbox"
                       defaultChecked={
-                        show.userWatchedData.showId === show.showInfo.id &&
+                        show.userWatchedData.isWatched &&
                         show.userWatchedData.watchedEpisodes.includes(
                           episode.id
                         )
                       }
-                      disabled={!show.userWatchedData.showId}
+                      disabled={!show.userWatchedData.isWatched}
                       onChange={(e) =>
                         handleEpisode(episode.id, e.target.checked)
                       }

@@ -3,11 +3,20 @@ import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
 import { createContext, useEffect, useState } from "react";
 import background from "../Assets/background.jpg";
+import Cookies from "js-cookie";
 
 export const authContext = createContext();
 
 export default function MainWindow() {
   const [authState, setAuthState] = useState(false);
+
+  useEffect(() => {
+    console.log(localStorage.getItem("isAuthorized"));
+    if (localStorage.getItem("isAuthorized") != null) {
+      setAuthState(true);
+      console.log(authState);
+    }
+  }, localStorage.getItem("isAuthorized"));
 
   return (
     <div>

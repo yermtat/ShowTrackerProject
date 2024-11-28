@@ -19,6 +19,7 @@ export default function Navbar() {
   const logoutHandle = async () => {
     try {
       await logout();
+      localStorage.removeItem("isAuthorized");
       isAuthorized.setAuthState(false);
       navigateTo("/login");
     } catch (ex) {

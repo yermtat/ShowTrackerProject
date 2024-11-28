@@ -34,6 +34,7 @@ export default function Login() {
         }
       );
 
+      localStorage.setItem("isAuthorized", true);
       isAuthorized.setAuthState(true);
       navigateTo("/home");
     } catch (error) {

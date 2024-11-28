@@ -126,16 +126,16 @@ public class ShowTrackerService : IShowTrackerService
 
         if (watchLater != null)
         {
-            return new WatchedShowDTO(0, new List<int>(), true, false);
+            return new WatchedShowDTO(false, new List<int>(), true, false);
         }
 
         var show = await _showTrackerContext.WatchedShows.FirstOrDefaultAsync(s => s.UserId == user.Id && s.ShowId == showId);
 
-        if (show == null) return new WatchedShowDTO(0, new List<int>(), false, false);
+        if (show == null) return new WatchedShowDTO(false, new List<int>(), false, false);
 
         var episodes = await _showTrackerContext.WatchedEpisodes.Where(s => s.WatchedShowId == show.Id).Select(e => e.EpisodeId).ToListAsync();
 
-        return new WatchedShowDTO(showId, episodes, false, show.IsFavorite);
+        return new WatchedShowDTO(true, episodes, false, show.IsFavorite);
 
     }
 
