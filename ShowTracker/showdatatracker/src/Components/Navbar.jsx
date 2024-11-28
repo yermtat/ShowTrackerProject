@@ -74,14 +74,24 @@ export default function Navbar() {
               </div>
             </Link>
             {isAuthorized.authState && (
-              <Link to="/myshows">
-                <div
-                  href="/"
-                  className="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
-                >
-                  My shows
-                </div>
-              </Link>
+              <div className="flex flex-row">
+                <Link to="/myshows">
+                  <div
+                    href="/"
+                    className="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
+                  >
+                    My shows
+                  </div>
+                </Link>
+                <Link to="/watchLater">
+                  <div
+                    href="/"
+                    className="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
+                  >
+                    Watch later
+                  </div>
+                </Link>
+              </div>
             )}
           </div>
 

@@ -9,5 +9,7 @@ namespace WatchedShowData.DTO;
 public record WatchedShowDTO
 (
     int showId,
-    List<int> watchedEpisodes
+    List<int> watchedEpisodes,
+    bool isWatchLater,
+    bool isFavourite
 );

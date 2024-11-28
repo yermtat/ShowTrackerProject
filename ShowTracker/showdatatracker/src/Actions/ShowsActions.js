@@ -120,3 +120,39 @@ export const getUserShowWatchedData = async (id) => {
     return alert(error.response.data.error);
   }
 };
+
+export const addToWatchLater = async (id) => {
+  try {
+    const fetchedData = await axios.post(
+      `https://localhost:7028/api/v1/ShowsData/WatchLater/${id}`,
+      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {
+        withCredentials: true, // передается в конфигурацию запроса
+      },
+      {
+        Accept: "*/*",
+        Host: "http://localhost:3000",
+      }
+    );
+  } catch (error) {
+    return error;
+  }
+};
+
+export const deleteFromWatchLater = async (id) => {
+  try {
+    const fetchedData = await axios.post(
+      `https://localhost:7028/api/v1/ShowsData/DeleteFromWatchLater/${id}`,
+      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {
+        withCredentials: true, // передается в конфигурацию запроса
+      },
+      {
+        Accept: "*/*",
+        Host: "http://localhost:3000",
+      }
+    );
+  } catch (error) {
+    throw error;
+  }
+};

@@ -9,10 +9,12 @@ import {
   settingsLoader,
   showDetailsLoader,
   trendingLoader,
+  watchLaterLoader,
 } from "./Actions/Loaders";
 
 import ShowDetails from "./Components/ShowDetails";
 import Settings from "./Components/Settings";
+import WatchLater from "./Components/WatchLater";
 
 const children = [
   {
@@ -47,6 +49,11 @@ const children = [
     path: "settings",
     element: <Settings />,
     loader: settingsLoader,
+  },
+  {
+    path: "watchLater",
+    element: <WatchLater />,
+    loader: watchLaterLoader,
   },
 ];
 

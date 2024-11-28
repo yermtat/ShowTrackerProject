@@ -19,6 +19,7 @@ public partial class ShowTrackerDbContext : DbContext
     public virtual DbSet<WatchedEpisode> WatchedEpisodes { get; set; }
 
     public virtual DbSet<WatchedShow> WatchedShows { get; set; }
+    public virtual DbSet<WatchLaterShow> WatchLaterShows { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,6 +38,14 @@ public partial class ShowTrackerDbContext : DbContext
         modelBuilder.Entity<WatchedShow>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__WatchedS__3214EC07C1201917");
+
+            entity.Property(e => e.ShowId).HasColumnName("ShowID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+        });
+
+        modelBuilder.Entity<WatchLaterShow>(entity =>
+        {
+            entity.HasKey(e => e.Id);
 
             entity.Property(e => e.ShowId).HasColumnName("ShowID");
             entity.Property(e => e.UserId).HasColumnName("UserID");

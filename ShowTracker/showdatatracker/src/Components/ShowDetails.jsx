@@ -7,6 +7,8 @@ import {
   addToWatchlist,
   watchEpisode,
   unwatchEpisode,
+  addToWatchLater,
+  deleteFromWatchLater,
 } from "../Actions/ShowsActions";
 
 export default function ShowDetails() {
@@ -97,6 +99,30 @@ export default function ShowDetails() {
     }
   };
 
+  const handleClicWatchLater = async () => {
+    try {
+      await addToWatchLater(show.showInfo.id);
+
+      navigateTo(
+        `/showDetails/${show.showInfo.id}?auth=${isAuthorized.authState}`
+      );
+    } catch (error) {
+      return alert(error.response.data.error);
+    }
+  };
+
+  const handleDeleteWatchLater = async () => {
+    try {
+      await deleteFromWatchLater(show.showInfo.id);
+
+      navigateTo(
+        `/showDetails/${show.showInfo.id}?auth=${isAuthorized.authState}`
+      );
+    } catch (error) {
+      return alert(error.response.data.error);
+    }
+  };
+
   return (
     <div className="">
       <div class="flex justify-center items-center h-full w-full">
@@ -131,20 +157,36 @@ export default function ShowDetails() {
             </div>
 
             {isAuthorized.authState && (
-              <button
-                onClick={
-                  show.userWatchedData.showId
-                    ? handleClickUnwatch
-                    : handleClickWatch
-                }
-                className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
-              >
-                {show.userWatchedData.showId ? (
-                  <span>Unwatch</span>
-                ) : (
-                  <span>Add to watchlist</span>
-                )}
-              </button>
+              <div>
+                <button
+                  onClick={
+                    show.userWatchedData.showId
+                      ? handleClickUnwatch
+                      : handleClickWatch
+                  }
+                  className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
+                >
+                  {show.userWatchedData.showId ? (
+                    <span>Unwatch</span>
+                  ) : (
+                    <span>Add to watchlist</span>
+                  )}
+                </button>
+                <button
+                  onClick={
+                    show.userWatchedData.isWatchLater
+                      ? handleDeleteWatchLater
+                      : handleClicWatchLater
+                  }
+                  className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
+                >
+                  {show.userWatchedData.isWatchLater ? (
+                    <span>Won't watch</span>
+                  ) : (
+                    <span>Watch later</span>
+                  )}
+                </button>
+              </div>
             )}
           </li>
         </ul>

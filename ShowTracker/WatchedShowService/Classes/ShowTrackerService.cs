@@ -61,6 +61,13 @@ public class ShowTrackerService : IShowTrackerService
                 throw new Exception("User not found");
             }
 
+            var watchlater = await _showTrackerContext.WatchLaterShows.FirstOrDefaultAsync(s => s.ShowId == showId && s.UserId == user.Id);
+            
+            if (watchlater != null)
+            {
+                _showTrackerContext.WatchLaterShows.Remove(watchlater);
+            }
+
             var watchedShow = new WatchedShow { ShowId = showId, UserId = user.Id };
             await _showTrackerContext.WatchedShows.AddAsync(watchedShow);
             await _showTrackerContext.SaveChangesAsync();
@@ -115,13 +122,20 @@ public class ShowTrackerService : IShowTrackerService
                 throw new Exception("User not found");
             }
 
-            var show = await _showTrackerContext.WatchedShows.FirstOrDefaultAsync(s => s.UserId == user.Id && s.ShowId == showId);
+        var watchLater = await _showTrackerContext.WatchLaterShows.FirstOrDefaultAsync(s => s.UserId == user.Id && s.ShowId == showId);
 
-            if (show == null) return new WatchedShowDTO(0, new List<int>());
+        if (watchLater != null)
+        {
+            return new WatchedShowDTO(0, new List<int>(), true, false);
+        }
 
-            var episodes = await _showTrackerContext.WatchedEpisodes.Where(s => s.WatchedShowId == show.Id).Select(e => e.EpisodeId).ToListAsync();
+        var show = await _showTrackerContext.WatchedShows.FirstOrDefaultAsync(s => s.UserId == user.Id && s.ShowId == showId);
 
-            return new WatchedShowDTO(showId, episodes);
+        if (show == null) return new WatchedShowDTO(0, new List<int>(), false, false);
+
+        var episodes = await _showTrackerContext.WatchedEpisodes.Where(s => s.WatchedShowId == show.Id).Select(e => e.EpisodeId).ToListAsync();
+
+        return new WatchedShowDTO(showId, episodes, false, false);
 
     }
 
@@ -136,7 +150,51 @@ public class ShowTrackerService : IShowTrackerService
             }
             
 
-            await _showTrackerContext.WatchedShows.Where(s => s.ShowId == showId).ExecuteDeleteAsync();
+            await _showTrackerContext.WatchedShows.Where(s => s.ShowId == showId && user.Id == s.UserId).ExecuteDeleteAsync();
+
+    }
+
+    public async Task AddToWatchLaterAsync(int showId, string username)
+    {
+        var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var show = new WatchLaterShow { ShowId = showId, UserId = user.Id };
+        await _showTrackerContext.WatchLaterShows.AddAsync(show);
+        await _showTrackerContext.SaveChangesAsync();
+    }
+
+    public async Task<List<int>> GetWatchLaterShowsIdAsync(string username)
+    {
+        var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var shows = _showTrackerContext.WatchLaterShows.Where(u => u.UserId == user.Id).Select(s => s.ShowId).ToList();
+
+        return shows;
+    }
+
+    public async Task DeleteFromWatchLaterAsync(int showId, string username)
+    {
+
+        var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+
+        await _showTrackerContext.WatchLaterShows.Where(s => s.ShowId == showId && user.Id == s.UserId).ExecuteDeleteAsync();
+
 
     }
 }

@@ -16,5 +16,8 @@ public interface IShowTrackerService
     public Task UnwatchEpisodeAsync(int showId, int episodeId, string username);
     public Task<WatchedShowDTO> GetWatchedShowInfoAsync(int showId, string username);
     public Task UnwatchShowAsync(int showId, string username);
+    public Task AddToWatchLaterAsync(int shwowId, string username);
 
+    public Task<List<int>> GetWatchLaterShowsIdAsync(string username);
+    public Task DeleteFromWatchLaterAsync(int showId, string username);
 }

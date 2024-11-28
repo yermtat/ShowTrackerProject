@@ -147,3 +147,39 @@ export const settingsLoader = async () => {
     console.log(error);
   }
 };
+
+export const watchLaterLoader = async () => {
+  try {
+    const userWatchedData = await axios.get(
+      `https://localhost:7028/api/v1/ShowsData/GetWatchLaterShows`,
+      {
+        withCredentials: true, // передается в конфигурацию запроса
+      },
+      {
+        Accept: "*/*",
+        Host: "http://localhost:3000",
+      }
+    );
+
+    console.log(userWatchedData.data);
+
+    const watchedShows = [];
+    let show;
+
+    for (let i = 0; i < userWatchedData.data.length; i++) {
+      const url = `https://api.tvmaze.com/shows/${userWatchedData.data[i]}?embed=episodes`;
+      const options = {
+        method: "GET",
+      };
+
+      show = await fetch(url, options).then((response) => response.json());
+
+      watchedShows.push(show);
+    }
+
+    console.log(watchedShows);
+    return watchedShows;
+  } catch (error) {
+    console.log(error);
+  }
+};
