@@ -41,6 +41,7 @@ public partial class ShowTrackerDbContext : DbContext
 
             entity.Property(e => e.ShowId).HasColumnName("ShowID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.IsFavorite).HasColumnName("IsFavourite");
         });
 
         modelBuilder.Entity<WatchLaterShow>(entity =>

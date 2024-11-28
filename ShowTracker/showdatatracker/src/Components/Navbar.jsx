@@ -91,6 +91,14 @@ export default function Navbar() {
                     Watch later
                   </div>
                 </Link>
+                <Link to="/favourites">
+                  <div
+                    href="/"
+                    className="text-white  px-4 py-2 transition-colors duration-300 hover:text-orange-600 "
+                  >
+                    Favourites
+                  </div>
+                </Link>
               </div>
             )}
           </div>

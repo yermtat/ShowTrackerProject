@@ -141,6 +141,46 @@ public class ShowsDataController : ControllerBase
 
     }
 
+    [Authorize]
+    [HttpPost("AddToFavourites/{ShowId}")]
+    public async Task<IActionResult> AddToFavouritesAsync(int ShowId)
+    {
+
+        var username = HttpContext.Request.Cookies["username"];
+
+        await _showTrackerService.AddToFavouriteAsync(ShowId, username);
+
+        return Ok();
+
+    }
+
+    [Authorize]
+    [HttpPost("DeleteFromFavourites/{ShowId}")]
+    public async Task<IActionResult> DeleteFromFavouritesAsync(int ShowId)
+    {
+
+        var username = HttpContext.Request.Cookies["username"];
+
+        await _showTrackerService.DeleteFromFavouriteAsync(ShowId, username);
+
+        return Ok();
+
+    }
+
+    [Authorize]
+    [HttpGet("GetFavouriteShows")]
+    public async Task<IActionResult> GetFavouriteShowsAsync()
+    {
+
+        var username = HttpContext.Request.Cookies["username"];
+
+        var res = await _showTrackerService.GetFavouriteShowsIdAsync(username);
+
+        return Ok(res);
+
+
+    }
+
 
 
 }

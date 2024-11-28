@@ -135,7 +135,7 @@ public class ShowTrackerService : IShowTrackerService
 
         var episodes = await _showTrackerContext.WatchedEpisodes.Where(s => s.WatchedShowId == show.Id).Select(e => e.EpisodeId).ToListAsync();
 
-        return new WatchedShowDTO(showId, episodes, false, false);
+        return new WatchedShowDTO(showId, episodes, false, show.IsFavorite);
 
     }
 
@@ -196,5 +196,61 @@ public class ShowTrackerService : IShowTrackerService
         await _showTrackerContext.WatchLaterShows.Where(s => s.ShowId == showId && user.Id == s.UserId).ExecuteDeleteAsync();
 
 
+    }
+
+    public async Task AddToFavouriteAsync(int showId, string username)
+    {
+        var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var show = await _showTrackerContext.WatchedShows.FirstOrDefaultAsync(s => s.ShowId == showId && user.Id == s.UserId);
+
+        if (show == null)
+        {
+            throw new Exception("Show not found");
+        }
+
+        show.IsFavorite = true;
+
+        await _showTrackerContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteFromFavouriteAsync(int showId, string username)
+    {
+        var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var show = await _showTrackerContext.WatchedShows.FirstOrDefaultAsync(s => s.ShowId == showId && user.Id == s.UserId);
+
+        if (show == null)
+        {
+            throw new Exception("Show not found");
+        }
+
+        show.IsFavorite = false;
+
+        await _showTrackerContext.SaveChangesAsync();
+    }
+
+    public async Task<List<int>> GetFavouriteShowsIdAsync(string username)
+    {
+        var user = await _authContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var shows = _showTrackerContext.WatchedShows.Where(u => u.UserId == user.Id && u.IsFavorite == true).Select(s => s.ShowId).ToList();
+
+        return shows;
     }
 }

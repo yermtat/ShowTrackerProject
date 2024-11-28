@@ -20,4 +20,8 @@ public interface IShowTrackerService
 
     public Task<List<int>> GetWatchLaterShowsIdAsync(string username);
     public Task DeleteFromWatchLaterAsync(int showId, string username);
+
+    public Task AddToFavouriteAsync( int showId, string username);
+    public Task DeleteFromFavouriteAsync(int  showId, string username);
+    public Task<List<int>> GetFavouriteShowsIdAsync(string username);
 }

@@ -156,3 +156,39 @@ export const deleteFromWatchLater = async (id) => {
     throw error;
   }
 };
+
+export const addToFavourites = async (id) => {
+  try {
+    const fetchedData = await axios.post(
+      `https://localhost:7028/api/v1/ShowsData/AddToFavourites/${id}`,
+      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {
+        withCredentials: true, // передается в конфигурацию запроса
+      },
+      {
+        Accept: "*/*",
+        Host: "http://localhost:3000",
+      }
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteFromFavourites = async (id) => {
+  try {
+    const fetchedData = await axios.post(
+      `https://localhost:7028/api/v1/ShowsData/DeleteFromFavourites/${id}`,
+      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {
+        withCredentials: true, // передается в конфигурацию запроса
+      },
+      {
+        Accept: "*/*",
+        Host: "http://localhost:3000",
+      }
+    );
+  } catch (error) {
+    throw error;
+  }
+};

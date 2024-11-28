@@ -9,6 +9,8 @@ import {
   unwatchEpisode,
   addToWatchLater,
   deleteFromWatchLater,
+  deleteFromFavourites,
+  addToFavourites,
 } from "../Actions/ShowsActions";
 
 export default function ShowDetails() {
@@ -123,6 +125,30 @@ export default function ShowDetails() {
     }
   };
 
+  const handleClicAddFavourite = async () => {
+    try {
+      await addToFavourites(show.showInfo.id);
+
+      navigateTo(
+        `/showDetails/${show.showInfo.id}?auth=${isAuthorized.authState}`
+      );
+    } catch (error) {
+      return alert(error.response.data.error);
+    }
+  };
+
+  const handleDeleteFavourite = async () => {
+    try {
+      await deleteFromFavourites(show.showInfo.id);
+
+      navigateTo(
+        `/showDetails/${show.showInfo.id}?auth=${isAuthorized.authState}`
+      );
+    } catch (error) {
+      return alert(error.response.data.error);
+    }
+  };
+
   return (
     <div className="">
       <div class="flex justify-center items-center h-full w-full">
@@ -184,6 +210,20 @@ export default function ShowDetails() {
                     <span>Won't watch</span>
                   ) : (
                     <span>Watch later</span>
+                  )}
+                </button>
+                <button
+                  onClick={
+                    show.userWatchedData.isFavourite
+                      ? handleDeleteFavourite
+                      : handleClicAddFavourite
+                  }
+                  className="m-10 h-11 border rounded-md text-white hover:text-orange-400 transition duration-300 ease-in-out bg-black"
+                >
+                  {show.userWatchedData.isFavourite ? (
+                    <span>Don't like</span>
+                  ) : (
+                    <span>Like</span>
                   )}
                 </button>
               </div>

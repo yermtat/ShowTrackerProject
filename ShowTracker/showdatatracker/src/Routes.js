@@ -5,6 +5,7 @@ import Register from "./Components/Register";
 import Myshows from "./Components/Myshows";
 
 import {
+  favouritesLoader,
   myShowsLoader,
   settingsLoader,
   showDetailsLoader,
@@ -15,6 +16,7 @@ import {
 import ShowDetails from "./Components/ShowDetails";
 import Settings from "./Components/Settings";
 import WatchLater from "./Components/WatchLater";
+import Favourites from "./Components/Favourites";
 
 const children = [
   {
@@ -54,6 +56,11 @@ const children = [
     path: "watchLater",
     element: <WatchLater />,
     loader: watchLaterLoader,
+  },
+  {
+    path: "favourites",
+    element: <Favourites />,
+    loader: favouritesLoader,
   },
 ];
 
