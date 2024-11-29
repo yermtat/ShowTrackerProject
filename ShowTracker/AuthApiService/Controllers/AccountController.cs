@@ -74,4 +74,19 @@ public class AccountController : ControllerBase
         
     }
 
+    [Authorize]
+    [HttpGet("GetUserInfo")]
+    public async Task<IActionResult> GetUserInfoAsync()
+    {
+
+        var token = HttpContext.Request.Headers["Authorization"];
+
+        token = token.ToString().Replace("Bearer ", "");
+
+        var res = await _accountService.GetUserInfoAsync(token);
+
+        return Ok(res);
+
+    }
+
 }

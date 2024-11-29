@@ -17,6 +17,7 @@ import ShowDetails from "./Components/ShowDetails";
 import Settings from "./Components/Settings";
 import WatchLater from "./Components/WatchLater";
 import Favourites from "./Components/Favourites";
+import ErrorPage from "./Components/ErrorPage";
 
 const children = [
   {
@@ -61,6 +62,10 @@ const children = [
     path: "favourites",
     element: <Favourites />,
     loader: favouritesLoader,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ];
 

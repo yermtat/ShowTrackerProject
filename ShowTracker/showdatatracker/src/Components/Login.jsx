@@ -38,7 +38,6 @@ export default function Login() {
       isAuthorized.setAuthState(true);
       navigateTo("/home");
     } catch (error) {
-      console.log(error.response.data.error);
       return alert(error.response.data.error);
     }
   };

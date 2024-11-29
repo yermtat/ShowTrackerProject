@@ -8,6 +8,11 @@ export default function WatchLater() {
 
   return (
     <div>
+      <div className="p-4 bg-surface-variant dark:bg-surface-variant-dark rounded-sm shadow-lg mb-8  bg-black bg-opacity-50">
+        <h1 className="text-3xl md:text-4xl font-bold text-yellow-500 dark:text-primary-dark text-center">
+          Saved for later
+        </h1>
+      </div>
       <div className="flex flex-wrap gap-10 p-10">
         {Array.isArray(shows) && shows.length > 0 ? (
           shows.map((show) => (

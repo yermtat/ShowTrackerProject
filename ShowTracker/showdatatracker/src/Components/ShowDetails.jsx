@@ -23,7 +23,6 @@ export default function ShowDetails() {
   };
 
   useEffect(() => {
-    // Проверяем наличие IMDb ID
     if (!show?.showInfo?.externals?.imdb) {
       console.warn("IMDb ID отсутствует.");
       return;
@@ -34,12 +33,11 @@ export default function ShowDetails() {
     const initializeKbox = () => {
       if (window.kbox) {
         try {
-          // Перед вызовом добавляем задержку
           setTimeout(() => {
             window.kbox(".kinobox_player", {
               search: { imdb: imdbId },
             });
-          }, 10); // Задержка для инициализации
+          }, 10);
         } catch (error) {
           console.error("Ошибка вызова kbox:", error);
         }
@@ -56,13 +54,12 @@ export default function ShowDetails() {
       document.body.appendChild(script);
     };
 
-    // Если kbox уже загружен, инициализируем сразу
     if (window.kbox) {
       initializeKbox();
     } else {
       loadScript();
     }
-  }, [show?.showInfo?.externals?.imdb]); // Зависимость на IMDb ID
+  }, [show?.showInfo?.externals?.imdb]);
 
   const handleClickWatch = async () => {
     try {
@@ -151,9 +148,7 @@ export default function ShowDetails() {
 
   return (
     <div className="flex flex-col items-center p-6 bg-surface dark:bg-surface-dark text-on-surface dark:text-on-surface-dark">
-      {/* Информация о сериале */}
       <div className="flex flex-col sm:flex-row items-center sm:items-start w-full max-w-6xl gap-8 ">
-        {/* Изображение сериала */}
         <div className="w-full sm:w-1/3">
           {show.showInfo.image ? (
             <img
@@ -169,7 +164,6 @@ export default function ShowDetails() {
           )}
         </div>
 
-        {/* Основная информация */}
         <div className="w-full sm:w-2/3">
           <div className="rounded-lg p-6 bg-slate-400 bg-opacity-35 dark:bg-primary-container-dark shadow-lg">
             <h2 className="text-3xl font-bold mb-4 text-primary dark:text-primary-dark">
@@ -197,7 +191,6 @@ export default function ShowDetails() {
 
           {isAuthorized.authState && (
             <div className="flex flex-wrap gap-4 mt-6">
-              {/* Кнопка Watch */}
               <button
                 onClick={
                   show.userWatchedData.isWatched
@@ -211,7 +204,6 @@ export default function ShowDetails() {
                   : "Add to watchlist"}
               </button>
 
-              {/* Кнопка Watch Later */}
               <button
                 onClick={
                   show.userWatchedData.isWatchLater
@@ -230,7 +222,6 @@ export default function ShowDetails() {
                   : "Watch later"}
               </button>
 
-              {/* Иконка Favourite */}
               <button
                 onClick={
                   show.userWatchedData.isFavourite
@@ -253,12 +244,10 @@ export default function ShowDetails() {
         </div>
       </div>
 
-      {/* Видеоплеер */}
       <div className="w-full max-w-6xl my-8 bg-secondary-container dark:bg-secondary-container-dark p-6 rounded-lg">
         <div className="kinobox_player w-full h-full"></div>
       </div>
 
-      {/* Список эпизодов */}
       <div className="w-full max-w-6xl">
         {Object.entries(
           show.showInfo._embedded.episodes.reduce((acc, episode) => {
@@ -267,47 +256,59 @@ export default function ShowDetails() {
             return acc;
           }, {})
         ).map(([season, episodes]) => (
-          <div key={season} className="mb-8 ">
+          <div key={season} className="mb-8">
             <h4 className="text-2xl font-bold mb-4 text-primary dark:text-primary-dark">
               Season {season}
             </h4>
             <ul className="border bg-slate-400 bg-opacity-35 border-outline dark:border-outline-dark rounded-lg bg-surface-variant dark:bg-surface-variant-dark p-4">
-              {episodes.map((episode) => (
-                <li
-                  key={episode.id}
-                  className="flex justify-between items-center py-2 border-b border-outline dark:border-outline-dark last:border-b-0"
-                >
-                  <div>
-                    <span className="font-bold text-on-surface dark:text-on-surface-dark">
-                      {episode.season}x{episode.number}
-                    </span>{" "}
-                    - {episode.name}
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-secondary dark:text-secondary-dark">
-                      {episode.airdate}
-                    </span>
-                    {isAuthorized.authState && (
-                      <input
-                        type="checkbox"
-                        defaultChecked={
-                          show.userWatchedData.isWatched &&
-                          show.userWatchedData.watchedEpisodes.includes(
-                            episode.id
-                          )
-                        }
-                        disabled={!show.userWatchedData.isWatched}
-                        onChange={(e) =>
-                          handleEpisode(episode.id, e.target.checked)
-                        }
-                        className={`w-5 h-5 ${
-                          show.userWatchedData.isWatched && "cursor-pointer"
-                        }  accent-primary dark:accent-primary-dark`}
-                      />
-                    )}
-                  </div>
-                </li>
-              ))}
+              {episodes.map((episode) => {
+                const isFutureEpisode = new Date(episode.airdate) > new Date();
+
+                return (
+                  <li
+                    key={episode.id}
+                    className="flex justify-between items-center py-2 border-b border-outline dark:border-outline-dark last:border-b-0"
+                  >
+                    <div>
+                      <span className="font-bold text-on-surface dark:text-on-surface-dark">
+                        {episode.season}x{episode.number}
+                      </span>{" "}
+                      - {episode.name}
+                      {isFutureEpisode && (
+                        <span className="ml-2 text-yellow-600 dark:text-yellow-300 font-medium text-sm">
+                          (Upcoming)
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-secondary dark:text-secondary-dark">
+                        {episode.airdate}
+                      </span>
+                      {isAuthorized.authState && (
+                        <input
+                          type="checkbox"
+                          defaultChecked={
+                            show.userWatchedData.isWatched &&
+                            show.userWatchedData.watchedEpisodes.includes(
+                              episode.id
+                            )
+                          }
+                          disabled={
+                            !show.userWatchedData.isWatched || isFutureEpisode
+                          }
+                          onChange={(e) =>
+                            handleEpisode(episode.id, e.target.checked)
+                          }
+                          className={`w-5 h-5 ${
+                            show.userWatchedData.isWatched & !isFutureEpisode &&
+                            "cursor-pointer"
+                          } accent-primary dark:accent-primary-dark`}
+                        />
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}

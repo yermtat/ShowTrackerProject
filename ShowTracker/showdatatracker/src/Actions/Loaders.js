@@ -24,19 +24,14 @@ export async function trendingLoader() {
 
 export const showDetailsLoader = async ({ params, request }) => {
   const url = new URL(request.url);
-  console.log(url);
   const isAuth = url.searchParams.get("auth");
-  console.log(isAuth);
-  console.log(params.id);
 
   try {
     const showInfo = await getShowInfoById(params.id);
     let userData;
-    if (isAuth == "true") {
+    if (isAuth === "true") {
       userData = await getUserShowWatchedData(params.id);
-      console.log("auth true");
     } else {
-      console.log("auth false");
       userData = null;
     }
 
@@ -46,6 +41,7 @@ export const showDetailsLoader = async ({ params, request }) => {
     };
   } catch (error) {
     console.log(error);
+    window.location.href = "/*";
   }
 };
 
@@ -54,15 +50,13 @@ export const myShowsLoader = async () => {
     const userWatchedData = await axios.get(
       `https://localhost:7028/api/v1/ShowsData/GetWatchedShows`,
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
         Host: "http://localhost:3000",
       }
     );
-
-    console.log(userWatchedData.data);
 
     const watchedShows = [];
     let show;
@@ -78,17 +72,17 @@ export const myShowsLoader = async () => {
       watchedShows.push(show);
     }
 
-    console.log(watchedShows);
     return watchedShows;
   } catch (error) {
     console.log(error);
+    window.location.href = "/*";
   }
 };
 
 export const settingsLoader = async () => {
   try {
     const res = await axios.get(
-      `https://localhost:7015/api/v1/Account/IsEmailConfirmed`,
+      `https://localhost:7015/api/v1/Account/GetUserInfo`,
       {
         withCredentials: true, // передается в конфигурацию запроса
       },
@@ -98,10 +92,10 @@ export const settingsLoader = async () => {
       }
     );
 
-    console.log(res.data);
     return res.data;
   } catch (error) {
     console.log(error);
+    window.location.href = "/*";
   }
 };
 
@@ -110,15 +104,13 @@ export const watchLaterLoader = async () => {
     const userWatchedData = await axios.get(
       `https://localhost:7028/api/v1/ShowsData/GetWatchLaterShows`,
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
         Host: "http://localhost:3000",
       }
     );
-
-    console.log(userWatchedData.data);
 
     const watchedShows = [];
     let show;
@@ -134,10 +126,10 @@ export const watchLaterLoader = async () => {
       watchedShows.push(show);
     }
 
-    console.log(watchedShows);
     return watchedShows;
   } catch (error) {
     console.log(error);
+    window.location.href = "/*";
   }
 };
 
@@ -146,15 +138,13 @@ export const favouritesLoader = async () => {
     const userWatchedData = await axios.get(
       `https://localhost:7028/api/v1/ShowsData/GetFavouriteShows`,
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
         Host: "http://localhost:3000",
       }
     );
-
-    console.log(userWatchedData.data);
 
     const watchedShows = [];
     let show;
@@ -170,9 +160,9 @@ export const favouritesLoader = async () => {
       watchedShows.push(show);
     }
 
-    console.log(watchedShows);
     return watchedShows;
   } catch (error) {
     console.log(error);
+    window.location.href = "/*";
   }
 };

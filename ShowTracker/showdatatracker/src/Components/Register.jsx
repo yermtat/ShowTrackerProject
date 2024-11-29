@@ -35,10 +35,8 @@ export default function Register() {
         }
       );
 
-      console.log(fetchedData);
       navigateTo("/login");
     } catch (error) {
-      console.log(error);
       return alert(error.response.data.error);
     }
   };

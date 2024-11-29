@@ -77,7 +77,6 @@ export default function Home() {
 
   return (
     <div className="text-gray-900 dark:text-gray-100">
-      {/* Search Bar Section */}
       <div className="search-bar-container p-8 md:p-20">
         <div
           className="relative h-64 bg-cover bg-center"
@@ -109,7 +108,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Slider Container */}
       <div className="slider-container p-8 md:p-20">
         <h2 className="text-3xl md:text-4xl font-bold text-yellow-500 text-center mb-8">
           Trending Shows
@@ -169,7 +167,6 @@ export default function Home() {
         >
           <div className="fixed inset-0 flex items-center justify-center">
             <div className="relative bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-4xl w-full mx-4 md:mx-auto overflow-hidden">
-              {/* Header Section */}
               <div className="p-4 bg-yellow-500 dark:bg-yellow-600 text-black dark:text-white font-bold text-lg">
                 Available Shows
                 <button
@@ -180,7 +177,6 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* Content Section */}
               <div className="p-6 max-h-[80vh] overflow-auto">
                 {Array.isArray(shows) && shows.length > 0 ? (
                   <div className="flex flex-wrap gap-4">

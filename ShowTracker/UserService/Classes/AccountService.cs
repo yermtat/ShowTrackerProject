@@ -49,6 +49,22 @@ public class AccountService : IAccountService
             await _emailSender.SendEmailAsync(user.Email, "Email confirmation", message);
     }
 
+    public async Task<UserInfoDTO> GetUserInfoAsync(string token)
+    {
+        var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);
+
+        var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        return new UserInfoDTO(user.Username, user.Email, user.IsEmailConfirmed);
+    }
+
     public async Task<IsEmailConfirmedDTO> IsEmailConfirmed(string token)
     {
         var principal = _tokenService.GetPrincipalFromToken(token, validateLifetime: true);

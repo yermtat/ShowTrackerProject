@@ -10,7 +10,7 @@ export const getShowsByName = async (search) => {
 
     return res;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -18,9 +18,9 @@ export const deleteFromWatchlist = async (id) => {
   try {
     const fetchedData = await axios.post(
       `https://localhost:7028/api/v1/ShowsData/Unwatch/${id}`,
-      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {},
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
@@ -28,7 +28,7 @@ export const deleteFromWatchlist = async (id) => {
       }
     );
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -36,9 +36,9 @@ export const addToWatchlist = async (id) => {
   try {
     const fetchedData = await axios.post(
       `https://localhost:7028/api/v1/ShowsData/MarkWatched/${id}`,
-      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {},
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
@@ -46,7 +46,7 @@ export const addToWatchlist = async (id) => {
       }
     );
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -64,7 +64,7 @@ export const watchEpisode = async (showId, episodeId) => {
       }
     );
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -82,7 +82,7 @@ export const unwatchEpisode = async (showId, episodeId) => {
       }
     );
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -98,7 +98,7 @@ export const getShowInfoById = async (id) => {
     );
     return showInfo;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -107,7 +107,7 @@ export const getUserShowWatchedData = async (id) => {
     const userWatchedData = await axios.get(
       `https://localhost:7028/api/v1/ShowsData/GetInfo/${id}`,
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
@@ -117,7 +117,7 @@ export const getUserShowWatchedData = async (id) => {
 
     return userWatchedData.data;
   } catch (error) {
-    return alert(error.response.data.error);
+    throw error;
   }
 };
 
@@ -125,9 +125,9 @@ export const addToWatchLater = async (id) => {
   try {
     const fetchedData = await axios.post(
       `https://localhost:7028/api/v1/ShowsData/WatchLater/${id}`,
-      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {},
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
@@ -135,7 +135,7 @@ export const addToWatchLater = async (id) => {
       }
     );
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -143,9 +143,9 @@ export const deleteFromWatchLater = async (id) => {
   try {
     const fetchedData = await axios.post(
       `https://localhost:7028/api/v1/ShowsData/DeleteFromWatchLater/${id}`,
-      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {},
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
@@ -161,9 +161,9 @@ export const addToFavourites = async (id) => {
   try {
     const fetchedData = await axios.post(
       `https://localhost:7028/api/v1/ShowsData/AddToFavourites/${id}`,
-      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {},
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
@@ -179,9 +179,9 @@ export const deleteFromFavourites = async (id) => {
   try {
     const fetchedData = await axios.post(
       `https://localhost:7028/api/v1/ShowsData/DeleteFromFavourites/${id}`,
-      {}, // тело запроса, если оно не нужно, оставьте пустым объектом
+      {},
       {
-        withCredentials: true, // передается в конфигурацию запроса
+        withCredentials: true,
       },
       {
         Accept: "*/*",
