@@ -117,14 +117,6 @@ builder.Services.AddAuthentication(options =>
                         if (newTokens != null)
                         {
 
-                            //var cookieOptions = new CookieOptions
-                            //{
-                            //    Path = "/",
-                            //    HttpOnly = true,  // Cookie is only accessible via HTTP requests
-                            //    Secure = true,    // Cookie is only sent over HTTPS
-                            //    Expires = DateTime.UtcNow.AddDays(1), // Set cookie expiration
-                            //    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
-                            //};
 
                             httpContext.Response.Cookies.Append("accessToken", newTokens.AccessToken);
                             httpContext.Response.Cookies.Append("refreshToken", newTokens.RefreshToken);

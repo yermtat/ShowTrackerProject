@@ -75,7 +75,11 @@ export default function Navbar() {
               </div>
             </Link>
             {isAuthorized.authState && (
-              <div className="flex flex-row">
+              <div
+                className={`lg:flex flex-col lg:flex-row ${
+                  isOpen ? "block" : "hidden"
+                } lg:space-x-4 lg:mt-0 mt-4 flex flex-col items-center text-xl`}
+              >
                 <Link to="/myshows">
                   <div
                     href="/"

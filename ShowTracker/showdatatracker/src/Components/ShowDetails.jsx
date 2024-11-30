@@ -152,13 +152,13 @@ export default function ShowDetails() {
         <div className="w-full sm:w-1/3">
           {show.showInfo.image ? (
             <img
-              className="w-full h-auto rounded-lg object-cover shadow-md"
+              className="w-full h-1/2 object-cover shadow-md"
               src={show.showInfo.image.original}
               alt={show.showInfo.name}
             />
           ) : (
             <img
-              className="w-full h-auto rounded-lg object-cover shadow-md"
+              className="w-full h-1/2 rounded-lg object-cover shadow-md"
               alt={show.showInfo.name}
             />
           )}

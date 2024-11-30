@@ -121,14 +121,6 @@ builder.Services.AddAuthentication(options =>
                         var newTokens = await response.Content.ReadFromJsonAsync<TokenDTO>();
                         if (newTokens != null)
                         {
-                            //var cookieOptions = new CookieOptions
-                            //{
-                            //    Path = "/",
-                            //    HttpOnly = true,  // Cookie is only accessible via HTTP requests
-                            //    Secure = true,    // Cookie is only sent over HTTPS
-                            //    Expires = DateTime.UtcNow.AddDays(1), // Set cookie expiration
-                            //    SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None
-                            //};
 
                             httpContext.Response.Cookies.Append("accessToken", newTokens.AccessToken);
                             httpContext.Response.Cookies.Append("refreshToken", newTokens.RefreshToken);
@@ -136,32 +128,6 @@ builder.Services.AddAuthentication(options =>
 
                             httpContext.Request.Headers["Authorization"] = $"Bearer {newTokens.AccessToken}";
 
-                            //context.HttpContext.Features.Set(
-                            //    new TokenValidatedContext(context.HttpContext, context.Scheme, context.Options)
-                            //    {
-                            //        Principal = context.Principal,
-                            //        SecurityToken = new JwtSecurityToken(newTokens.AccessToken)
-                            //    });
-
-
-                            //var originalRequest = httpContext.Request;
-                            //var retryClient = httpContext.RequestServices.GetRequiredService<IHttpClientFactory>().CreateClient();
-
-                            //// Создаем новый запрос с обновленным accessToken
-                            //var retryRequest = new HttpRequestMessage(new HttpMethod(originalRequest.Method), originalRequest.GetDisplayUrl())
-                            //{
-                            //    Content = originalRequest.HasFormContentType
-                            //              ? new FormUrlEncodedContent(originalRequest.Form.ToDictionary(x => x.Key, x => x.Value.ToString()))
-                            //              : null
-                            //};
-                            //retryRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newTokens.AccessToken);
-
-                            //// Выполняем повторный запрос
-                            //var retryResponse = await retryClient.SendAsync(retryRequest);
-
-                            //// Завершаем текущий pipeline с результатом повторного запроса
-                            //httpContext.Response.StatusCode = (int)retryResponse.StatusCode;
-                            //await retryResponse.Content.CopyToAsync(httpContext.Response.Body);
 
 
                             // Повторно валидируем токен
